@@ -1,59 +1,62 @@
-import { Code2, Layers3, Smartphone } from "lucide-react";
-import GradientSeparator from "@/app/components/sections/GradientSeparator";
+import { Code2, Layers3, Smartphone, Cpu, CheckCircle2 } from "lucide-react";
 import SkillsCircuit from "@/app/components/sections/SkillsCircuit";
 import TechStackTerminal from "@/app/components/sections/TechStackTerminal";
+import FinalCTA from "@/app/components/sections/FinalCTA";
 
 export const metadata = {
-  title: "Compétences — Rosca",
-  description: "Découvrez les technologies, stacks et approches utilisées pour créer des expériences web et mobiles modernes.",
+  title: "Compétences & Stack — Rosca",
+  description: "Découvrez les technologies, frameworks et approches d'architecture utilisées par Rosca.",
 };
 
 const pillars = [
   {
-    title: "Frontend",
-    description: "Interfaces rapides, propres et pensées pour la conversion.",
+    title: "Frontend Web",
+    description: "Next.js 16, React 19, TypeScript & Tailwind CSS pour des interfaces ultra réactives et optimisées.",
     icon: Code2,
   },
   {
-    title: "Architecture",
-    description: "Structuration claire, évolutive et maintenable sur le long terme.",
-    icon: Layers3,
+    title: "Mobile Native & Cross",
+    description: "Applications Flutter & Kotlin fluides avec intégration de paiement Mobile Money.",
+    icon: Smartphone,
   },
   {
-    title: "Mobile",
-    description: "Expériences natives et hybrides optimisées pour chaque usage.",
-    icon: Smartphone,
+    title: "APIs & IA",
+    description: "Architectures REST solides, bases de données MySQL/PostgreSQL et intégrations d'agents IA.",
+    icon: Layers3,
   },
 ];
 
 export default function CompetencesPage() {
   return (
-    <main className="overflow-hidden">
-      <section className="mx-auto max-w-6xl px-6 py-20 sm:px-8 sm:py-24 lg:px-10">
-        <div className="rounded-[2rem] border border-[#D9491F]/15 bg-[linear-gradient(135deg,#FFF7F0_0%,#FFFDF9_45%,#FFF2E7_100%)] p-8 shadow-[0_35px_100px_-45px_rgba(217,73,31,0.35)] sm:p-10 lg:p-14">
+    <main className="overflow-hidden pt-6">
+      <section className="mx-auto max-w-6xl px-6 py-12">
+        <div className="rounded-[2.5rem] border border-[#D9491F]/20 bg-gradient-to-br from-[#FFF8F2] via-white to-[#FBE8DD] p-8 sm:p-12 md:p-16 shadow-xl shadow-[#D9491F]/10">
           <div className="max-w-3xl">
-            <p className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/15 bg-white/70 px-3 py-1.5 text-sm font-semibold uppercase tracking-[0.25em] text-[#D9491F] backdrop-blur">
-              <span className="h-2 w-2 rounded-full bg-[#D9491F]" />
-              Compétences
-            </p>
-            <h1 className="mt-6 text-4xl font-black tracking-tight text-text sm:text-5xl">
-              Un stack polyvalent pour transformer vos idées en produits concrets.
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/20 bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#D9491F]">
+              <Cpu className="h-3.5 w-3.5" />
+              Stack &amp; Technologies
+            </span>
+            <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-text leading-tight">
+              Un écosystème polyvalent pour <span className="framed-accent text-[#D9491F]">concrétiser</span> vos projets.
             </h1>
-            <p className="mt-5 text-lg leading-8 text-muted sm:text-xl">
-              Du front-end à l&apos;architecture globale, je conçois des solutions modernes, réactives et pensées pour durer.
+            <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted">
+              De l'interface utilisateur à la logique serveur, j'utilise les meilleurs standards du développement moderne pour garantir vitesse, sécurité et évolutivité.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
             {pillars.map((pillar) => {
               const Icon = pillar.icon;
               return (
-                <div key={pillar.title} className="rounded-2xl border border-[#D9491F]/10 bg-white/80 p-5 shadow-sm">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#D9491F]/10 text-[#D9491F]">
-                    <Icon className="h-5 w-5" />
+                <div
+                  key={pillar.title}
+                  className="rounded-3xl border border-[#D9491F]/15 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#D9491F]/30 hover:shadow-md"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FBE8DD] text-[#D9491F]">
+                    <Icon className="h-6 w-6" />
                   </div>
-                  <h2 className="mt-4 text-xl font-semibold text-text">{pillar.title}</h2>
-                  <p className="mt-2 text-sm leading-7 text-muted">{pillar.description}</p>
+                  <h2 className="mt-5 text-lg font-bold text-text">{pillar.title}</h2>
+                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted">{pillar.description}</p>
                 </div>
               );
             })}
@@ -61,9 +64,10 @@ export default function CompetencesPage() {
         </div>
       </section>
 
-      <GradientSeparator />
       <SkillsCircuit />
       <TechStackTerminal />
+      <FinalCTA />
     </main>
   );
 }
+

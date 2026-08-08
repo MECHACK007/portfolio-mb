@@ -2,17 +2,74 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion, Variants } from "framer-motion";
+import { Terminal, Copy, Check, Sparkles, Code2, Server, Smartphone, Wrench } from "lucide-react";
+
+type StackCategory = {
+  id: string;
+  name: string;
+  icon: React.ComponentType<{ className?: string }>;
+  items: { name: string; level: string; icon: string }[];
+};
+
+const stackCategories: StackCategory[] = [
+  {
+    id: "frontend",
+    name: "Frontend Web",
+    icon: Code2,
+    items: [
+      { name: "Next.js 16", level: "Avancé", icon: "⚡" },
+      { name: "React 19", level: "Avancé", icon: "⚛️" },
+      { name: "TypeScript", level: "Avancé", icon: "📘" },
+      { name: "Tailwind CSS v4", level: "Avancé", icon: "🎨" },
+      { name: "Framer Motion", level: "Intermédiaire", icon: "✨" },
+    ],
+  },
+  {
+    id: "mobile",
+    name: "Mobile & Cross-Platform",
+    icon: Smartphone,
+    items: [
+      { name: "Flutter & Dart", level: "Avancé", icon: "💙" },
+      { name: "Kotlin", level: "Intermédiaire", icon: "🤖" },
+      { name: "Mobile Money API", level: "Avancé", icon: "💳" },
+      { name: "Firebase", level: "Intermédiaire", icon: "🔥" },
+    ],
+  },
+  {
+    id: "backend",
+    name: "Backend & Cloud",
+    icon: Server,
+    items: [
+      { name: "Node.js & Express", level: "Avancé", icon: "🟢" },
+      { name: "REST & GraphQL APIs", level: "Avancé", icon: "🔌" },
+      { name: "Laravel", level: "Intermédiaire", icon: "🔴" },
+      { name: "MySQL & PostgreSQL", level: "Avancé", icon: "🛢️" },
+      { name: "Docker", level: "Intermédiaire", icon: "🐳" },
+    ],
+  },
+  {
+    id: "ai-tools",
+    name: "IA & Tools",
+    icon: Wrench,
+    items: [
+      { name: "OpenAI API & Agents", level: "Avancé", icon: "🤖" },
+      { name: "Git & GitHub", level: "Avancé", icon: "📦" },
+      { name: "Vercel & Cloud", level: "Avancé", icon: "▲" },
+      { name: "Postman", level: "Avancé", icon: "🚀" },
+    ],
+  },
+];
 
 export default function TechStackTerminal(): React.JSX.Element {
+  const [activeTab, setActiveTab] = useState<string>("all");
+  const [copied, setCopied] = useState(false);
   const [typed, setTyped] = useState("");
   const [typingFinished, setTypingFinished] = useState(false);
-  const fullCommand = "stack --list --all";
-  const typingSpeed = 35; // ms per character
+  const fullCommand = "rosca --show-stack --format json";
   const hasTriggered = useRef(false);
 
   useEffect(() => {
     return () => {
-      // cleanup if unmounted
       hasTriggered.current = true;
     };
   }, []);
@@ -30,185 +87,162 @@ export default function TechStackTerminal(): React.JSX.Element {
         clearInterval(id);
         setTypingFinished(true);
       }
-    }, typingSpeed);
+    }, 35);
   }
 
-  const containerVariants: Variants = {
-    hidden: {},
-    show: {
-      transition: {
-        staggerChildren: 0.12,
-      },
-    },
+  const copyToClipboard = () => {
+    const text = stackCategories
+      .map((cat) => `${cat.name}: ${cat.items.map((i) => i.name).join(", ")}`)
+      .join("\n");
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const rowVariants: Variants = {
-    hidden: { opacity: 0, y: -6 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-  };
+  const filteredCategories =
+    activeTab === "all"
+      ? stackCategories
+      : stackCategories.filter((cat) => cat.id === activeTab);
 
   return (
-    <section className="mx-auto max-w-5xl px-6 py-24">
-      <div className="mb-11 text-center">
-        <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#D9491F]/18 bg-[#FBE8DD] px-8 py-3 text-base font-semibold text-[#D9491F] shadow-sm">
-          ◆ STACK TECHNIQUE
-        </span>
-        <h2 className="text-4xl font-extrabold text-text md:text-5xl">
-          Technologies <span className="rounded-full bg-[#FBE8DD] px-4 py-1 text-[#D9491F] font-semibold">maîtrisées</span>
-        </h2>
+    <section className="relative mx-auto max-w-5xl px-6 py-20 md:py-28 overflow-hidden">
+      {/* Header */}
+      <div className="mb-12 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/20 bg-[#FBE8DD]/60 px-4 py-1.5 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#D9491F]"
+        >
+          <Terminal className="h-3.5 w-3.5" />
+          Stack &amp; Outils
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mt-4 text-3xl sm:text-4xl md:text-5xl font-black text-text tracking-tight"
+        >
+          Terminal &amp; <span className="framed-accent text-[#D9491F]">Technologies</span>
+        </motion.h2>
+
+        {/* Filter Pills */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+          <button
+            onClick={() => setActiveTab("all")}
+            className={`rounded-full px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
+              activeTab === "all"
+                ? "bg-[#D9491F] text-white shadow-md shadow-[#D9491F]/20"
+                : "bg-white border border-[#D9491F]/15 text-muted hover:text-text hover:bg-gray-50"
+            }`}
+          >
+            Tout afficher
+          </button>
+          {stackCategories.map((cat) => {
+            const Icon = cat.icon;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setActiveTab(cat.id)}
+                className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
+                  activeTab === cat.id
+                    ? "bg-[#D9491F] text-white shadow-md shadow-[#D9491F]/20"
+                    : "bg-white border border-[#D9491F]/15 text-muted hover:text-text hover:bg-gray-50"
+                }`}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                {cat.name}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
+      {/* Terminal Container */}
       <div className="relative">
-        {/* Ambient halo */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -inset-8 -z-10 mx-auto h-[420px] w-[95%] rounded-3xl blur-3xl opacity-40"
-          style={{ background: "radial-gradient(closest-side, rgba(217,73,31,0.12), transparent 40%)" }}
-        />
+        <div className="overflow-hidden rounded-3xl border border-black/10 bg-[#16171B] shadow-2xl shadow-black/20">
+          {/* Header Bar */}
+          <div className="flex items-center justify-between bg-[#22242A] px-5 py-3.5 border-b border-white/5">
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-full bg-[#FF5F57]" />
+              <span className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
+              <span className="h-3 w-3 rounded-full bg-[#28C840]" />
+              <span className="ml-2 font-mono text-xs text-gray-400">bash — rosca@dev-terminal</span>
+            </div>
 
-        <div className="overflow-hidden rounded-2xl border border-black/5 shadow-2xl shadow-black/10 relative">
-          {/* Barre de titre with pulsating dots */}
-          <div className="flex items-center gap-2 bg-[#F2EFE9] px-5 py-3.5">
-            <motion.span
-              className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]"
-              animate={{ scale: [1, 1.12, 1], opacity: [1, 0.85, 1] }}
-              transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.span
-              className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]"
-              animate={{ scale: [1, 1.08, 1], opacity: [1, 0.9, 1] }}
-              transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-            />
-            <motion.span
-              className="h-2.5 w-2.5 rounded-full bg-[#28C840]"
-              animate={{ scale: [1, 1.06, 1], opacity: [1, 0.92, 1] }}
-              transition={{ duration: 3.0, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-            />
-            <span className="mx-auto -translate-x-2 text-xs text-[#8A8680]">rosca@portfolio — stack</span>
+            <button
+              onClick={copyToClipboard}
+              className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1 text-xs text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+              <span>{copied ? "Copié !" : "Copier"}</span>
+            </button>
           </div>
 
-          {/* Corps terminal */}
-          <div className="relative bg-[#1A1B1F] px-8 py-8 font-mono text-base leading-loose text-[#F4F1EC] overflow-hidden">
-            {/* Scanline */}
+          {/* Terminal Content Body */}
+          <div className="p-6 sm:p-8 font-mono text-sm leading-relaxed text-gray-200">
+            {/* Prompt line */}
             <motion.div
-              aria-hidden
-              className="absolute left-0 top-0 h-2 w-full bg-gradient-to-b from-transparent via-white/3 to-transparent opacity-5 blur-sm"
-              animate={{ y: [ -200, 200 ] }}
-              transition={{ duration: 6, repeat: Infinity, repeatType: "loop", ease: "linear" }}
-              style={{ pointerEvents: "none" }}
-            />
-
-            <motion.div
-              className="relative z-10"
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.5 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
               onViewportEnter={() => startTyping()}
-              variants={containerVariants}
+              className="flex items-center gap-2 text-xs sm:text-sm mb-6 pb-4 border-b border-white/10"
             >
-              <motion.p className="flex items-center" variants={rowVariants}>
-                <span className="text-accent mr-2">rosca</span>
-                <span className="text-muted mr-2">@portfolio:~$</span>
-                <span className="text-[#F4F1EC]">
-                  {typed}
-                  <span
-                    className={`inline-block h-4 w-2 translate-y-0.5 ml-1 bg-accent ${
-                      typingFinished ? "animate-blink" : ""
-                    }`}
-                    style={{ verticalAlign: "middle" }}
-                  />
-                </span>
-              </motion.p>
-
-              <motion.div className="mt-4" variants={rowVariants}>
-                <motion.p className="mt-3.5 text-base text-[#6B7280]" variants={rowVariants}>
-                  # Frontend
-                </motion.p>
-                <motion.p className="text-accent flex flex-wrap gap-2" variants={rowVariants}>
-                  {[
-                    "Next.js",
-                    "React",
-                    "TypeScript",
-                    "Tailwind CSS",
-                  ].map((t) => (
-                    <span
-                      key={t}
-                      className="inline-block px-1 transition-shadow duration-200 hover:underline hover:drop-shadow-[0_0_12px_rgba(217,73,31,0.25)]"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </motion.p>
-              </motion.div>
-
-              <motion.div className="mt-3.5" variants={rowVariants}>
-                <motion.p className="text-base text-[#6B7280]" variants={rowVariants}>
-                  # Backend
-                </motion.p>
-                <motion.p className="text-accent flex flex-wrap gap-2" variants={rowVariants}>
-                  {[
-                    "Node.js",
-                    "REST API",
-                    "Laravel",
-                  ].map((t) => (
-                    <span
-                      key={t}
-                      className="inline-block px-1 transition-shadow duration-200 hover:underline hover:drop-shadow-[0_0_12px_rgba(217,73,31,0.25)]"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </motion.p>
-              </motion.div>
-
-              <motion.div className="mt-3.5" variants={rowVariants}>
-                <motion.p className="text-base text-[#6B7280]" variants={rowVariants}>
-                  # Mobile
-                </motion.p>
-                <motion.p className="text-accent flex flex-wrap gap-2" variants={rowVariants}>
-                  {[
-                    "Flutter",
-                    "Kotlin",
-                  ].map((t) => (
-                    <span
-                      key={t}
-                      className="inline-block px-1 transition-shadow duration-200 hover:underline hover:drop-shadow-[0_0_12px_rgba(217,73,31,0.25)]"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </motion.p>
-              </motion.div>
-
-              <motion.div className="mt-3.5" variants={rowVariants}>
-                <motion.p className="text-base text-[#6B7280]" variants={rowVariants}>
-                  # Data &amp; Infra
-                </motion.p>
-                <motion.p className="text-accent flex flex-wrap gap-2" variants={rowVariants}>
-                  {[
-                    "MySQL",
-                    "Docker",
-                    "Git",
-                  ].map((t) => (
-                    <span
-                      key={t}
-                      className="inline-block px-1 transition-shadow duration-200 hover:underline hover:drop-shadow-[0_0_12px_rgba(217,73,31,0.25)]"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </motion.p>
-              </motion.div>
-
-              <motion.p className="mt-4" variants={rowVariants}>
-                <span className="text-accent">rosca</span>
-                <span className="text-muted">@portfolio:~$</span>{" "}
-                <span className="inline-block h-4 w-2 translate-y-0.5 bg-accent" />
-              </motion.p>
+              <span className="text-[#D9491F] font-bold">rosca@portfolio</span>
+              <span className="text-gray-500">:~$</span>
+              <span className="text-emerald-400 font-semibold">{typed}</span>
+              <span
+                className={`inline-block h-4 w-2 bg-[#D9491F] ${
+                  typingFinished ? "animate-blink" : ""
+                }`}
+              />
             </motion.div>
+
+            {/* Stack list */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredCategories.map((category) => (
+                <div
+                  key={category.id}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm transition-all hover:border-[#D9491F]/40"
+                >
+                  <div className="flex items-center gap-2 mb-4 text-[#D9491F]">
+                    <category.icon className="h-4 w-4" />
+                    <h3 className="font-sans font-bold text-base text-white">{category.name}</h3>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {category.items.map((item) => (
+                      <div key={item.name} className="flex items-center justify-between text-xs sm:text-sm">
+                        <div className="flex items-center gap-2">
+                          <span>{item.icon}</span>
+                          <span className="font-semibold text-gray-200">{item.name}</span>
+                        </div>
+                        <span className="rounded-md bg-white/10 px-2 py-0.5 text-[10px] font-mono text-[#D9491F]">
+                          {item.level}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Status Footer line */}
+            <div className="mt-8 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-gray-400">
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Statut : Prêt pour déploiement &amp; intégration</span>
+              </div>
+              <span className="text-gray-500">Rosca Fullstack Dev v2.0</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 }
+

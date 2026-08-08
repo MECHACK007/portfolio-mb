@@ -1,105 +1,127 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, ExternalLink, Code2, CheckCircle2 } from "lucide-react";
 import { projects } from "@/app/lib/projects";
+import FinalCTA from "@/app/components/sections/FinalCTA";
 
 export const metadata = {
-  title: "Portfolio — Rosca",
-  description: "Découvrez les projets web et mobiles réalisés avec une attention particulière à l'expérience utilisateur et à la qualité technique.",
+  title: "Réalisations & Portfolio — Rosca",
+  description: "Découvrez l'ensemble des projets web, applications mobiles et intégrations sur-mesure réalisées par Rosca.",
 };
-
-const highlights = [
-  "Sites vitrines premium et interfaces sur mesure",
-  "Applications web modernes avec performances et SEO",
-  "Solutions mobiles et produits orientés conversion",
-];
 
 export default function PortfolioPage() {
   return (
-    <main className="overflow-hidden">
-      <section className="mx-auto max-w-6xl px-6 py-20 sm:px-8 sm:py-24 lg:px-10">
-        <div className="rounded-[2rem] border border-[#D9491F]/15 bg-[linear-gradient(135deg,#FFF7F0_0%,#FFFDF9_45%,#FFF2E7_100%)] p-8 shadow-[0_35px_100px_-45px_rgba(217,73,31,0.35)] sm:p-10 lg:p-14">
+    <main className="overflow-hidden pt-6">
+      {/* Header Banner */}
+      <section className="mx-auto max-w-6xl px-6 py-12">
+        <div className="rounded-[2.5rem] border border-[#D9491F]/20 bg-gradient-to-br from-[#FFF8F2] via-white to-[#FBE8DD] p-8 sm:p-12 md:p-16 shadow-xl shadow-[#D9491F]/10">
           <div className="max-w-3xl">
-            <p className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/15 bg-white/70 px-3 py-1.5 text-sm font-semibold uppercase tracking-[0.25em] text-[#D9491F] backdrop-blur">
-              <Sparkles className="h-4 w-4" />
-              Réalisations
-            </p>
-            <h1 className="mt-6 text-4xl font-black tracking-tight text-text sm:text-5xl">
-              Des projets pensés pour l&apos;effet, la clarté et les résultats.
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/20 bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#D9491F]">
+              <Sparkles className="h-3.5 w-3.5" />
+              Portfolio &amp; Projets
+            </span>
+            <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-text leading-tight">
+              Des réalisations pensées pour l&apos;impact, la clarté et la <span className="framed-accent text-[#D9491F]">performance</span>.
             </h1>
-            <p className="mt-5 text-lg leading-8 text-muted sm:text-xl">
-              Chaque réalisation est construite autour d&apos;un objectif précis : transmettre un message fort, guider l&apos;utilisateur et faire grandir votre présence en ligne.
+            <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted">
+              Chaque projet est conçu sur-mesure pour répondre à des besoins précis : transmettre un message fort, offrir une expérience utilisateur remarquable et accélérer votre présence numérique.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-            <div className="rounded-3xl border border-[#D9491F]/10 bg-white/80 p-6 shadow-sm">
-              <ul className="space-y-3 text-base text-muted">
-                {highlights.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#D9491F]" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href="/contact"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#D9491F] px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5"
-              >
-                Discutons de votre prochain projet
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+          <div className="mt-8 flex flex-wrap gap-6 border-t border-black/5 pt-6 text-xs sm:text-sm font-medium text-text">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-[#D9491F]" />
+              <span>Applications Web Sur-mesure</span>
             </div>
-
-            <div className="rounded-3xl border border-[#D9491F]/10 bg-[#FFF8F2] p-6 shadow-sm">
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#D9491F]">Focus</p>
-              <h2 className="mt-3 text-2xl font-semibold text-text">Des produits modernes, rapides et orientés conversion.</h2>
-              <p className="mt-3 text-sm leading-7 text-muted">
-                Les réalisations ci-dessous sont présentées comme un aperçu de mon approche : structure claire, design soigné et attention aux détails qui façonnent la confiance.
-              </p>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-[#D9491F]" />
+              <span>Apps Mobiles iOS &amp; Android</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-[#D9491F]" />
+              <span>Intégration Mobile Money &amp; APIs</span>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 pb-20 sm:px-8 lg:px-10">
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {/* Projects Grid Section */}
+      <section className="mx-auto max-w-6xl px-6 py-12">
+        <div className="grid gap-8 md:grid-cols-2">
           {projects.map((project) => (
-            <article key={project.slug} className="group overflow-hidden rounded-[1.5rem] border border-[#D9491F]/10 bg-white shadow-[0_20px_60px_-35px_rgba(17,24,39,0.25)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_70px_-28px_rgba(217,73,31,0.3)]">
-              <div className="relative h-56 w-full overflow-hidden">
-                <Image src={project.image} alt={project.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+            <article
+              key={project.slug}
+              className="group overflow-hidden rounded-3xl border border-[#D9491F]/15 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#D9491F]/15 hover:border-[#D9491F]/30 flex flex-col justify-between"
+            >
+              {/* Card Browser Top Bar */}
+              <div className="bg-[#F6F4EF] px-4 py-3 border-b border-black/5 flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
+                </div>
+                <span className="font-mono text-xs font-medium text-gray-400">
+                  {project.domain}
+                </span>
               </div>
 
-              <div className="p-6">
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <span key={tag} className="rounded-full border border-[#D9491F]/10 bg-[#FFF3EA] px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#D9491F]">
-                      {tag}
-                    </span>
-                  ))}
+              {/* Image Preview */}
+              <div className="relative h-60 sm:h-72 w-full overflow-hidden bg-gray-100">
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+
+              {/* Content */}
+              <div className="p-6 sm:p-8 flex flex-col justify-between flex-1">
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[#D9491F]">
+                    {project.subtitle}
+                  </span>
+                  <h3 className="mt-2 text-xl sm:text-2xl font-extrabold text-text group-hover:text-[#D9491F] transition-colors">
+                    {project.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">
+                    {project.description}
+                  </p>
                 </div>
 
-                <h3 className="mt-4 text-xl font-semibold text-text">{project.title}</h3>
-                <p className="mt-2 text-sm leading-7 text-muted">{project.description}</p>
+                <div className="mt-6 pt-4 border-t border-black/5 flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-lg bg-[#FBE8DD] border border-[#D9491F]/10 px-2.5 py-1 text-xs font-semibold text-[#D9491F]"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
 
-                {project.url ? (
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#D9491F]"
-                  >
-                    Voir le projet
-                    <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-                  </a>
-                ) : null}
+                  {project.url && (
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#D9491F] hover:underline"
+                    >
+                      <span>Aperçu live</span>
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  )}
+                </div>
               </div>
             </article>
           ))}
         </div>
       </section>
+
+      {/* CTA */}
+      <FinalCTA />
     </main>
   );
 }
+
