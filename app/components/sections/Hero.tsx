@@ -70,7 +70,7 @@ export default function Hero() {
             Voir mes réalisations
           </Link>
           <Link
-            href="/contact"
+            href="mailto:roscabangoulou@icloud.com"
             className="btn-secondary-bg inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-base font-semibold text-text shadow-sm"
           >
             Discutons
@@ -87,11 +87,11 @@ export default function Hero() {
         >
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-[#D9491F]" />
-            <span>Next.js & React</span>
+            <span>React et JavaScript</span>
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-[#D9491F]" />
-            <span>Flutter & Mobile Money</span>
+            <span>Flutter et Dart</span>
           </div>
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-[#D9491F]" />
@@ -112,9 +112,9 @@ export default function Hero() {
         <div className="absolute -inset-8 rounded-full border border-dashed border-[#D9491F]/15 animate-[spin_40s_linear_infinite]" />
 
         {/* Main Avatar Card Container */}
-        <div className="relative h-72 w-72 sm:h-80 sm:w-80 md:h-96 md:w-96 overflow-hidden rounded-full border-4 border-white bg-gradient-to-br from-[#FFF6EE] via-white to-[#FBE8DD] shadow-[0_25px_70px_-15px_rgba(217,73,31,0.3)]">
+        <div className="relative h-80 w-80 sm:h-[22rem] sm:w-[22rem] md:h-[26rem] md:w-[26rem] overflow-hidden rounded-full border-4 border-white bg-gradient-to-br from-[#FFF6EE] via-white to-[#FBE8DD] shadow-[0_25px_70px_-15px_rgba(217,73,31,0.3)]">
           <Image
-            src="/images/bongo_concentre.png"
+            src="/images/About_Rosca.PNG"
             alt="Rosca — Développeur Web & Mobile"
             fill
             className="object-cover object-center transition-transform duration-700 hover:scale-105"
@@ -133,7 +133,7 @@ export default function Hero() {
           </div>
           <div>
             <p className="text-xs font-bold text-text">Web Fullstack</p>
-            <p className="text-[10px] text-muted">Next.js 16 & React</p>
+            <p className="text-[10px] text-muted">React et JavaScript</p>
           </div>
         </motion.div>
 
@@ -148,7 +148,7 @@ export default function Hero() {
           </div>
           <div>
             <p className="text-xs font-bold text-text">App Mobile</p>
-            <p className="text-[10px] text-muted">Flutter & Kotlin</p>
+            <p className="text-[10px] text-muted">Flutter et Dart</p>
           </div>
         </motion.div>
 

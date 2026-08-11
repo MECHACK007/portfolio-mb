@@ -28,7 +28,7 @@ export default function Footer() {
             </h3>
 
             <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted">
-              Développeur Fullstack spécialisé en Next.js, React, APIs REST et applications mobiles Flutter. Disponible pour projets en freelance et consultance.
+              Développeur Fullstack en Next.js, React, APIs REST et Flutter mobile. Disponible pour des missions freelance et des collaborations en consultance.
             </p>
 
             <div className="mt-6 flex items-center gap-3">
@@ -60,7 +60,7 @@ export default function Footer() {
 
               {/* Email */}
               <a
-                href="mailto:contact@rosca.dev"
+                href="mailto:roscabangoulou@icloud.com"
                 aria-label="Email"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-[#D9491F]/15 bg-white text-text transition-all hover:bg-[#D9491F] hover:text-white"
               >
@@ -97,4 +97,4 @@ export default function Footer() {
     </footer>
   );
 }
-
+

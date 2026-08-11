@@ -4,7 +4,7 @@ import { MessageCircle, Mail, Sparkles, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function FinalCTA() {
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
+  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "242065147072";
   const waMessage = encodeURIComponent("Bonjour Rosca, j'ai un projet web/mobile à vous soumettre.");
 
   return (
@@ -56,7 +56,7 @@ export default function FinalCTA() {
               Discuter sur WhatsApp
             </a>
             <a
-              href="mailto:contact@rosca.dev"
+              href="mailto:roscabangoulou@icloud.com"
               className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white/20"
             >
               <Mail className="h-5 w-5 text-white" />

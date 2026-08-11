@@ -9,16 +9,22 @@ type Diploma = {
 
 const formations: Diploma[] = [
   {
-    period: "2023 — 2025",
+    period: "2023 — 2026",
     title: "Licence / Diplôme en Génie Logiciel",
-    school: "Institut Supérieur des Technologies",
-    detail: "Spécialisation en développement web moderne, bases de données relationnelles et architecture logicielle.",
+    school: "Ecole supérieure de gestion d'administration des entreprises (ESGAE)",
+    detail: "Formation approfondie en ingénierie logicielle avec une forte orientation vers le développement web, la conception d'applications et la gestion des projets informatiques.",
   },
   {
     period: "2022 — 2023",
-    title: "Certification Développeur Fullstack Web & Mobile",
-    school: "Formation Intensive Tech & Mobile",
-    detail: "Maîtrise approfondie des écosystèmes React/Next.js, Flutter, APIs REST et déploiement cloud.",
+    title: "Baccalauréat Général D",
+    school: "Lycée de Massengo",
+    detail: "Obtention du Baccalauréat Général avec une base solide en culture générale, sciences et communication, préparant une transition réussie vers les études supérieures en informatique.",
+  },
+  {
+    period: "2022 — 2023",
+    title: "Certification A1 en anglais",
+    school: "FLTC",
+    detail: "Certification de niveau A1 attestant d’une compréhension et d’une communication basique en anglais, acquise dans un contexte d’apprentissage structuré.",
   },
 ];
 

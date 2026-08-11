@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/app/components/layout/Header";
 import Footer from "@/app/components/layout/Footer";
 import WhatsAppButton from "@/app/components/contact/WhatsAppButton";
+import InitialPreloader from "@/app/components/ui/InitialPreloader";
 
 export const metadata: Metadata = {
   title: "Rosca — Développeur Fullstack",
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body>
+        <InitialPreloader />
         <Header />
         <main>{children}</main>
         <Footer />

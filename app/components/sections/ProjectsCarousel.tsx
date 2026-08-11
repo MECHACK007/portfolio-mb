@@ -2,14 +2,34 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Briefcase, ExternalLink, Sparkles } from "lucide-react";
+import { ArrowUpRight, Briefcase, ExternalLink, Sparkles, X } from "lucide-react";
 import { projects } from "@/app/lib/projects";
 
 const marqueeTop = [...projects, ...projects, ...projects];
 const marqueeBottom = [...projects.slice().reverse(), ...projects.slice().reverse(), ...projects.slice().reverse()];
 
 export default function ProjectsCarousel() {
+  const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+
+  useEffect(() => {
+    if (selectedProject) {
+      setIsOverlayVisible(true);
+      document.body.style.overflow = "hidden";
+    } else {
+      setIsOverlayVisible(false);
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedProject]);
+
+  const closeModal = () => setSelectedProject(null);
+
   return (
     <section className="relative mx-auto max-w-full py-20 md:py-28 overflow-hidden">
       {/* Header */}
@@ -58,7 +78,7 @@ export default function ProjectsCarousel() {
           <div className="overflow-hidden pause-on-hover py-2">
             <div className="flex animate-marquee-right flex-nowrap gap-6 will-change-transform">
               {marqueeTop.map((project, index) => (
-                <ProjectCard key={`top-${project.slug}-${index}`} project={project} />
+                <ProjectCard key={`top-${project.slug}-${index}`} project={project} onOpen={() => setSelectedProject(project)} />
               ))}
             </div>
           </div>
@@ -67,7 +87,7 @@ export default function ProjectsCarousel() {
           <div className="overflow-hidden pause-on-hover py-2">
             <div className="flex animate-marquee-left flex-nowrap gap-6 will-change-transform">
               {marqueeBottom.map((project, index) => (
-                <ProjectCard key={`bot-${project.slug}-${index}`} project={project} />
+                <ProjectCard key={`bot-${project.slug}-${index}`} project={project} onOpen={() => setSelectedProject(project)} />
               ))}
             </div>
           </div>
@@ -84,17 +104,92 @@ export default function ProjectsCarousel() {
           <ArrowUpRight className="h-4 w-4" />
         </Link>
       </div>
+
+      {selectedProject && (
+        <div
+          className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+            isOverlayVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+          onClick={closeModal}
+        >
+          <div
+            className="relative mx-4 w-full max-w-3xl overflow-hidden rounded-[32px] bg-white shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={closeModal}
+              className="absolute right-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-text shadow-sm transition hover:bg-white"
+              aria-label="Fermer"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="relative h-72 w-full bg-slate-100">
+              <Image
+                src={selectedProject.image}
+                alt={selectedProject.title}
+                fill
+                className="object-cover"
+              />
+            </div>
+
+            <div className="p-8">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 className="text-2xl font-black text-text">{selectedProject.title}</h3>
+                  <p className="mt-2 text-sm text-muted">{selectedProject.subtitle}</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProject.tags.slice(0, 4).map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-[#FBE8DD]/80 px-3 py-1 text-xs font-semibold text-[#D9491F]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <p className="mt-6 text-sm leading-relaxed text-text">{selectedProject.description}</p>
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                <Link
+                  href={`/portfolio/${selectedProject.slug}`}
+                  onClick={closeModal}
+                  className="inline-flex items-center justify-center rounded-full border border-[#D9491F] bg-white px-6 py-3 text-sm font-semibold text-[#D9491F] transition hover:bg-[#FBE8DD]"
+                >
+                  Voir tous les détails
+                </Link>
+                <a
+                  href={selectedProject.url || "#"}
+                  target={selectedProject.url ? "_blank" : "_self"}
+                  rel="noopener noreferrer"
+                  className={`inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition ${
+                    selectedProject.url
+                      ? "bg-[#D9491F] text-white hover:bg-[#b73721]"
+                      : "bg-[#E5E7EB] text-[#6B7280] cursor-not-allowed"
+                  }`}
+                  aria-disabled={!selectedProject.url}
+                >
+                  Visiter le site
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
 
-function ProjectCard({ project }: { project: (typeof projects)[number] }) {
+function ProjectCard({ project, onOpen }: { project: (typeof projects)[number]; onOpen: () => void }) {
   return (
-    <a
-      href={project.url || "/portfolio"}
-      target={project.url ? "_blank" : "_self"}
-      rel="noopener noreferrer"
-      className="project-card group shrink-0 w-80 sm:w-96 rounded-3xl border border-[#D9491F]/15 bg-white shadow-sm overflow-hidden flex flex-col justify-between"
+    <button
+      type="button"
+      onClick={onOpen}
+      className="project-card group shrink-0 w-80 sm:w-96 rounded-3xl border border-[#D9491F]/15 bg-white shadow-sm overflow-hidden flex flex-col justify-between text-left"
     >
       {/* Browser Bar */}
       <div className="bg-[#F6F4EF] px-4 py-3 border-b border-black/5 flex items-center justify-between">
@@ -119,7 +214,7 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-text backdrop-blur-md">
             <ExternalLink className="h-3.5 w-3.5 text-[#D9491F]" />
-            Visiter le site
+            {project.url ? "Visiter le site" : "En savoir plus"}
           </span>
         </div>
       </div>
@@ -151,7 +246,7 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
           ))}
         </div>
       </div>
-    </a>
+    </button>
   );
 }
 

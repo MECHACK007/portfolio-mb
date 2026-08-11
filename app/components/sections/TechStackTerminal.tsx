@@ -2,13 +2,35 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion, Variants } from "framer-motion";
-import { Terminal, Copy, Check, Sparkles, Code2, Server, Smartphone, Wrench } from "lucide-react";
+import {
+  Terminal,
+  Copy,
+  Check,
+  Sparkles,
+  Code2,
+  Server,
+  Smartphone,
+  Wrench,
+  Zap,
+  Atom,
+  FileCode,
+  Feather,
+  RotateCcw,
+  CreditCard,
+  Flame,
+  Database,
+  GitBranch,
+  Cloud,
+  Send,
+  Cpu,
+  Package,
+} from "lucide-react";
 
 type StackCategory = {
   id: string;
   name: string;
   icon: React.ComponentType<{ className?: string }>;
-  items: { name: string; level: string; icon: string }[];
+  items: { name: string; level: string; icon: React.ComponentType<{ className?: string }> }[];
 };
 
 const stackCategories: StackCategory[] = [
@@ -17,11 +39,11 @@ const stackCategories: StackCategory[] = [
     name: "Frontend Web",
     icon: Code2,
     items: [
-      { name: "Next.js 16", level: "Avancé", icon: "⚡" },
-      { name: "React 19", level: "Avancé", icon: "⚛️" },
-      { name: "TypeScript", level: "Avancé", icon: "📘" },
-      { name: "Tailwind CSS v4", level: "Avancé", icon: "🎨" },
-      { name: "Framer Motion", level: "Intermédiaire", icon: "✨" },
+      { name: "React 19", level: "Moyen", icon: Atom },
+      { name: "JavaScript", level: "Débutant", icon: Code2 },
+      { name: "TypeScript", level: "Débutant", icon: FileCode },
+      { name: "Tailwind CSS v4", level: "Moyen", icon: Feather },
+      { name: "Framer Motion", level: "Moyen", icon: Sparkles },
     ],
   },
   {
@@ -29,10 +51,8 @@ const stackCategories: StackCategory[] = [
     name: "Mobile & Cross-Platform",
     icon: Smartphone,
     items: [
-      { name: "Flutter & Dart", level: "Avancé", icon: "💙" },
-      { name: "Kotlin", level: "Intermédiaire", icon: "🤖" },
-      { name: "Mobile Money API", level: "Avancé", icon: "💳" },
-      { name: "Firebase", level: "Intermédiaire", icon: "🔥" },
+      { name: "Flutter & Dart", level: "Moyen", icon: Smartphone },
+      { name: "Firebase", level: "Débutant", icon: Flame },
     ],
   },
   {
@@ -40,11 +60,12 @@ const stackCategories: StackCategory[] = [
     name: "Backend & Cloud",
     icon: Server,
     items: [
-      { name: "Node.js & Express", level: "Avancé", icon: "🟢" },
-      { name: "REST & GraphQL APIs", level: "Avancé", icon: "🔌" },
-      { name: "Laravel", level: "Intermédiaire", icon: "🔴" },
-      { name: "MySQL & PostgreSQL", level: "Avancé", icon: "🛢️" },
-      { name: "Docker", level: "Intermédiaire", icon: "🐳" },
+      { name: "Node.js & Express", level: "Moyen", icon: Code2 },
+      { name: "REST APIs", level: "Moyen", icon: RotateCcw },
+      { name: "Laravel", level: "Moyen", icon: Code2 },
+      { name: "PHP", level: "Moyen", icon: Code2 },
+      { name: "MySQL & PostgreSQL", level: "Moyen", icon: Database },
+      { name: "Docker", level: "Moyen", icon: Package },
     ],
   },
   {
@@ -52,10 +73,10 @@ const stackCategories: StackCategory[] = [
     name: "IA & Tools",
     icon: Wrench,
     items: [
-      { name: "OpenAI API & Agents", level: "Avancé", icon: "🤖" },
-      { name: "Git & GitHub", level: "Avancé", icon: "📦" },
-      { name: "Vercel & Cloud", level: "Avancé", icon: "▲" },
-      { name: "Postman", level: "Avancé", icon: "🚀" },
+      { name: "OpenAI API & Agents", level: "Moyen", icon: Cpu },
+      { name: "Git & GitHub", level: "Moyen", icon: GitBranch },
+      { name: "Vercel & Cloud", level: "Débutant", icon: Cloud },
+      { name: "Postman", level: "Moyen", icon: Send },
     ],
   },
 ];
@@ -218,7 +239,7 @@ export default function TechStackTerminal(): React.JSX.Element {
                     {category.items.map((item) => (
                       <div key={item.name} className="flex items-center justify-between text-xs sm:text-sm">
                         <div className="flex items-center gap-2">
-                          <span>{item.icon}</span>
+                          <item.icon className="h-4 w-4" />
                           <span className="font-semibold text-gray-200">{item.name}</span>
                         </div>
                         <span className="rounded-md bg-white/10 px-2 py-0.5 text-[10px] font-mono text-[#D9491F]">

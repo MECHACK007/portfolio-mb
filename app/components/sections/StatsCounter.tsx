@@ -14,8 +14,8 @@ type Stat = {
 
 const stats: Stat[] = [
   { label: "Expérience", sublabel: "Années de pratique web & mobile", value: 2, suffix: "+", icon: Clock3 },
-  { label: "Projets livrés", sublabel: "Applications & sites déployés", value: 8, suffix: "+", icon: Package },
-  { label: "Satisfaction client", sublabel: "Engagement & qualité garantis", value: 100, suffix: "%", icon: Heart },
+  { label: "Projets livrés", sublabel: "Applications & sites déployés", value: 3, suffix: "+", icon: Package },
+  { label: "Satisfaction client", sublabel: "Engagement & qualité garantis", value: 90, suffix: "%", icon: Heart },
 ];
 
 function Counter({ value, suffix, delay }: { value: number; suffix?: string; delay: number }) {

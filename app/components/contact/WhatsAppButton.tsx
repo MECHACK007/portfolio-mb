@@ -24,7 +24,7 @@ export default function WhatsAppButton() {
   const prefersReducedMotion = useReducedMotion();
 
   const whatsappHref = useMemo(() => {
-    const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.trim() ?? "";
+    const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.trim() || "242065147072";
     return buildWhatsAppUrl(number);
   }, []);
 

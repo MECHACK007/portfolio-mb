@@ -15,28 +15,20 @@ type Experience = {
 
 const experiences: Experience[] = [
   {
-    period: "2025 — Présent",
+    period: "décembre-mai 2026",
     role: "Développeur Fullstack Web & Mobile",
-    company: "Freelance & Consultance",
-    location: "Abidjan & Remote",
-    desc: "Conception complète d'applications web Next.js, apps Flutter avec paiement Mobile Money et architecture API.",
-    tags: ["Next.js", "Flutter", "Mobile Money", "Node.js"],
-  },
-  {
-    period: "2024 — 2025",
-    role: "Développeur Web & Mobile",
-    company: "Digital Solution Studio",
-    location: "Hybride",
-    desc: "Développement de plateformes e-commerce, dashboards analytiques et intégration de solutions d'automatisation IA.",
-    tags: ["React", "TypeScript", "Tailwind", "REST API"],
-  },
-  {
-    period: "2023 — 2024",
-    role: "Développeur Front-End React",
-    company: "Tech Agency",
+    company: "Freelance et Accademique",
     location: "Présentiel",
-    desc: "Intégration d'interfaces web ultra rapides, optimisation SEO et responsive design sur mesure.",
-    tags: ["React", "JavaScript", "HTML/CSS", "Git"],
+    desc: "Conception complète d'applications web React, développement backend Laravel et intégration de bases MongoDb.",
+    tags: ["React", "Flutter", "MongoDb", "express", "Git", "Tailwind CSS", "Nodes"],
+  },
+  {
+    period: "janvier-juin 2026",
+    role: "Développeur Front-End React et backend Laravel",
+    company: "Met-Tech",
+    location: "Présentiel",
+    desc: "Conception d'interfaces React performantes et développement backend Laravel pour des applications web robustes.",
+    tags: ["React", "JavaScript", "Tailwind CSS", "Laravel", "Git"],
   },
 ];
 

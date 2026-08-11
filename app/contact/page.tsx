@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Mail, MessageCircle, Send, MapPin, Clock, Sparkles } from "lucide-react";
+import ContactForm from "@/app/components/contact/ContactForm";
 
 export const metadata = {
   title: "Contact — Rosca",
@@ -7,7 +8,7 @@ export const metadata = {
 };
 
 export default function ContactPage() {
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
+  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "242065147072";
   const waMessage = encodeURIComponent("Bonjour Rosca, je souhaite échanger sur un projet.");
 
   return (
@@ -30,7 +31,7 @@ export default function ContactPage() {
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             {/* Email Card */}
             <a
-              href="mailto:contact@rosca.dev"
+              href="mailto:roscabangoulou@icloud.com"
               className="group rounded-3xl border border-[#D9491F]/15 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-[#D9491F]/30 hover:shadow-xl flex flex-col justify-between"
             >
               <div>
@@ -45,7 +46,7 @@ export default function ContactPage() {
                 </p>
               </div>
               <div className="mt-6 pt-4 border-t border-black/5 flex items-center justify-between font-mono text-sm font-semibold text-[#D9491F]">
-                <span>contact@rosca.dev</span>
+                <span>roscabangoulou@icloud.com</span>
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
               </div>
             </a>
@@ -85,6 +86,11 @@ export default function ContactPage() {
               <span>Disponible en Remote &amp; Hybride</span>
             </div>
           </div>
+        </div>
+
+        {/* Contact Form Section */}
+        <div className="mt-12">
+          <ContactForm />
         </div>
       </section>
     </main>

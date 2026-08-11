@@ -25,7 +25,7 @@ export default function AboutSection() {
             {/* Image container */}
             <div className="relative h-[340px] sm:h-[400px] w-full overflow-hidden rounded-2xl bg-gradient-to-b from-[#FFF7F0] to-[#FBE8DD]">
               <Image
-                src="/images/bongo_concentre.png"
+                src="/images/Hero_Rosca.PNG"
                 alt="Rosca — Développeur Web & Mobile"
                 fill
                 sizes="(min-width: 1024px) 400px, 100vw"
@@ -50,15 +50,15 @@ export default function AboutSection() {
             <div className="mt-4 p-2 space-y-2">
               <div className="flex items-center gap-2 text-xs font-medium text-text">
                 <CheckCircle2 className="h-4 w-4 text-[#D9491F] shrink-0" />
-                <span>Spécialiste Next.js 16, React &amp; Tailwind</span>
+                <span>Next.js 16, React et Tailwind CSS</span>
               </div>
               <div className="flex items-center gap-2 text-xs font-medium text-text">
                 <CheckCircle2 className="h-4 w-4 text-[#D9491F] shrink-0" />
-                <span>Développement Mobile Flutter &amp; Paiement Mobile Money</span>
+                <span>Applications mobiles Flutter avec intégration Paiement Mobile</span>
               </div>
               <div className="flex items-center gap-2 text-xs font-medium text-text">
                 <CheckCircle2 className="h-4 w-4 text-[#D9491F] shrink-0" />
-                <span>Architecture APIs REST &amp; Automatisation IA</span>
+                <span>Conception d’APIs REST et solutions IA automatisées</span>
               </div>
             </div>
 

@@ -39,7 +39,7 @@ export default function PortfolioPage() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-[#D9491F]" />
-              <span>Intégration Mobile Money &amp; APIs</span>
+              <span>Inegration Apis.</span>
             </div>
           </div>
         </div>
@@ -66,14 +66,14 @@ export default function PortfolioPage() {
               </div>
 
               {/* Image Preview */}
-              <div className="relative h-60 sm:h-72 w-full overflow-hidden bg-gray-100">
+              <Link href={`/portfolio/${project.slug}`} className="relative h-60 sm:h-72 w-full overflow-hidden bg-gray-100 block">
                 <Image
                   src={project.image}
                   alt={project.title}
                   fill
                   className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 />
-              </div>
+              </Link>
 
               {/* Content */}
               <div className="p-6 sm:p-8 flex flex-col justify-between flex-1">
@@ -81,9 +81,11 @@ export default function PortfolioPage() {
                   <span className="text-xs font-semibold uppercase tracking-wider text-[#D9491F]">
                     {project.subtitle}
                   </span>
-                  <h3 className="mt-2 text-xl sm:text-2xl font-extrabold text-text group-hover:text-[#D9491F] transition-colors">
-                    {project.title}
-                  </h3>
+                  <Link href={`/portfolio/${project.slug}`}>
+                    <h3 className="mt-2 text-xl sm:text-2xl font-extrabold text-text group-hover:text-[#D9491F] transition-colors">
+                      {project.title}
+                    </h3>
+                  </Link>
                   <p className="mt-3 text-sm leading-relaxed text-muted">
                     {project.description}
                   </p>
@@ -101,17 +103,27 @@ export default function PortfolioPage() {
                     ))}
                   </div>
 
-                  {project.url && (
-                    <a
-                      href={project.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#D9491F] hover:underline"
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={`/portfolio/${project.slug}`}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-[#D9491F] px-4 py-2 text-xs font-bold text-white transition-all hover:bg-[#b73721] hover:shadow-md"
                     >
-                      <span>Aperçu live</span>
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  )}
+                      <span>Détails du projet</span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+
+                    {project.url && (
+                      <a
+                        href={project.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-[#D9491F] hover:underline"
+                        title="Aperçu live"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             </article>
