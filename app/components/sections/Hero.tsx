@@ -2,169 +2,193 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Folder, Code2, Smartphone, Cpu, CheckCircle2 } from "lucide-react";
+import { motion, useMotionTemplate, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import { useRef, type PointerEvent } from "react";
+import Magnetic from "@/app/components/ui/Magnetic";
+import RollText from "@/app/components/ui/RollText";
+import { EASE_EXPO, RevealLines } from "@/app/components/ui/Reveal";
+import { useIntroReady, useLocalTime } from "@/app/components/ui/hooks";
+import { CONTACT_EMAIL } from "@/app/lib/contact";
+import heroPhoto from "@/public/images/About_Rosca.webp";
+
+const highlights = ["React et JavaScript", "Flutter et Dart", "APIs & Intégration IA"];
 
 export default function Hero() {
+  const ref = useRef<HTMLElement>(null);
+  const ready = useIntroReady();
+  const time = useLocalTime();
+
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const titleY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
+  const photoY = useTransform(scrollYProgress, [0, 1], ["0%", "16%"]);
+  const photoScale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+
+  const pointerX = useMotionValue(70);
+  const pointerY = useMotionValue(30);
+  const glowX = useSpring(pointerX, { stiffness: 50, damping: 20 });
+  const glowY = useSpring(pointerY, { stiffness: 50, damping: 20 });
+  const spotlight = useMotionTemplate`radial-gradient(640px circle at ${glowX}% ${glowY}%, rgba(255, 90, 31, 0.17), transparent 65%)`;
+
+  const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    pointerX.set(((event.clientX - rect.left) / rect.width) * 100);
+    pointerY.set(((event.clientY - rect.top) / rect.height) * 100);
+  };
+
+  const appear = (delay: number) => ({
+    initial: { opacity: 0, y: 24 },
+    animate: ready ? { opacity: 1, y: 0 } : undefined,
+    transition: { duration: 1, ease: EASE_EXPO, delay },
+  });
+
   return (
-    <section className="relative mx-auto flex max-w-6xl flex-col items-center justify-between gap-12 px-6 pt-12 pb-20 md:pt-16 md:pb-28 md:flex-row">
-      {/* Background ambient lighting */}
-      <div className="pointer-events-none absolute -top-24 left-1/2 h-[450px] w-[450px] -translate-x-1/2 rounded-full bg-[#D9491F]/15 blur-[120px]" />
-      <div className="pointer-events-none absolute top-1/3 right-10 h-[300px] w-[300px] rounded-full bg-amber-400/10 blur-[90px]" />
-
-      {/* Content Column */}
-      <div className="flex max-w-2xl flex-col items-center text-center md:items-start md:text-left z-10">
-        {/* Availability Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-[#D9491F]/20 bg-white/80 px-4 py-2 text-sm font-medium text-text shadow-sm backdrop-blur-md"
-        >
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
-          </span>
-          <span className="text-sm font-semibold text-[#D9491F]">Disponible</span>
-          <span className="text-gray-300">•</span>
-          <span className="text-muted text-xs md:text-sm">Pour de nouveaux projets</span>
-        </motion.div>
-
-        {/* Main Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-text leading-[1.1]"
-        >
-          Je conçois, je développe,{" "}
-          <span className="relative inline-block mt-1">
-            <span className="framed-accent font-extrabold text-[#D9491F]">
-              je concrétise.
-            </span>
-          </span>
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-6 max-w-xl text-base sm:text-lg md:text-xl leading-relaxed text-muted"
-        >
-          Développeur <strong className="text-text font-semibold">Fullstack Web & Mobile</strong> — Je façonne des applications performantes, élégantes et sur-mesure pour transformer vos idées en réalité.
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-8 flex flex-wrap items-center justify-center gap-4 md:justify-start"
-        >
-          <Link
-            href="/portfolio"
-            className="btn-with-folder inline-flex items-center gap-2.5 rounded-full bg-[#D9491F] px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-[#D9491F]/25 transition-all duration-300 hover:-translate-y-1 hover:bg-[#c43e16] hover:shadow-xl hover:shadow-[#D9491F]/35"
-          >
-            <Folder className="h-5 w-5 folder-icon text-white" />
-            Voir mes réalisations
-          </Link>
-          <Link
-            href="mailto:roscabangoulou@icloud.com"
-            className="btn-secondary-bg inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-base font-semibold text-text shadow-sm"
-          >
-            Discutons
-            <ArrowRight className="h-4 w-4 text-[#D9491F] transition-transform duration-200 group-hover:translate-x-1" />
-          </Link>
-        </motion.div>
-
-        {/* Highlights line */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-10 flex flex-wrap items-center justify-center md:justify-start gap-6 text-xs sm:text-sm text-muted border-t border-black/5 pt-6"
-        >
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-[#D9491F]" />
-            <span>React et JavaScript</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-[#D9491F]" />
-            <span>Flutter et Dart</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-[#D9491F]" />
-            <span>APIs & Intégration IA</span>
-          </div>
-        </motion.div>
+    <section
+      ref={ref}
+      onPointerMove={handlePointerMove}
+      className="relative flex min-h-[100svh] flex-col overflow-hidden pb-10 pt-28 sm:pt-32"
+    >
+      <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: spotlight }} />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="container-x grid h-full grid-cols-3 lg:grid-cols-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className={`border-l border-bone/[0.05] ${i >= 3 ? "hidden lg:block" : ""} ${i === 5 || i === 2 ? "border-r" : ""} ${i === 2 ? "lg:border-r-0" : ""}`} />
+          ))}
+        </div>
       </div>
 
-      {/* Visual Avatar / Graphic Column */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
-        className="relative flex items-center justify-center shrink-0"
-      >
-        {/* Decorative Ring */}
-        <div className="absolute -inset-4 rounded-full border border-[#D9491F]/20 animate-pulse-glow" />
-        <div className="absolute -inset-8 rounded-full border border-dashed border-[#D9491F]/15 animate-[spin_40s_linear_infinite]" />
+      <div className="container-x relative flex flex-1 flex-col">
+        <motion.div
+          {...appear(0.1)}
+          className="flex items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.22em] text-smoke"
+        >
+          <span className="flex items-center gap-2.5">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
+              <span className="relative h-2 w-2 rounded-full bg-emerald-400" />
+            </span>
+            <span className="text-bone">Disponible</span>
+            <span className="hidden sm:inline">— Pour de nouveaux projets</span>
+          </span>
+          <span className="hidden md:inline">Développeur Fullstack Web &amp; Mobile</span>
+          <span>
+            Brazzaville <span className="text-ember">{time}</span>
+          </span>
+        </motion.div>
 
-        {/* Main Avatar Card Container */}
-        <div className="relative h-80 w-80 sm:h-[22rem] sm:w-[22rem] md:h-[26rem] md:w-[26rem] overflow-hidden rounded-full border-4 border-white bg-gradient-to-br from-[#FFF6EE] via-white to-[#FBE8DD] shadow-[0_25px_70px_-15px_rgba(217,73,31,0.3)]">
-          <Image
-            src="/images/About_Rosca.PNG"
-            alt="Rosca — Développeur Web & Mobile"
-            fill
-            className="object-cover object-center transition-transform duration-700 hover:scale-105"
-            priority
-          />
+        <div className="relative mt-auto grid grid-cols-1 items-end gap-12 pt-14 lg:grid-cols-12 lg:gap-6">
+          <motion.div style={{ y: titleY }} className="relative z-10 lg:col-span-8">
+            <RevealLines
+              as="h1"
+              waitIntro
+              delay={0.15}
+              stagger={0.11}
+              className="text-[clamp(3.1rem,9.2vw,11.5rem)] font-bold leading-[0.86] tracking-[-0.055em]"
+              lines={[
+                "Je conçois,",
+                "je développe,",
+                <span key="accent" className="font-serif font-normal italic tracking-[-0.03em] text-ember">
+                  je concrétise.
+                </span>,
+              ]}
+            />
+          </motion.div>
+
+          <motion.div
+            style={{ y: photoY, scale: photoScale }}
+            className="relative mx-auto w-full max-w-[22rem] lg:col-span-4 lg:max-w-none"
+          >
+            <div className="relative aspect-[4/5] overflow-hidden rounded-b-[2rem] rounded-t-[999px] lg:aspect-[5/6]">
+              <motion.div
+                initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
+                animate={ready ? { clipPath: "inset(0% 0% 0% 0%)" } : undefined}
+                transition={{ duration: 1.4, ease: [0.76, 0, 0.24, 1], delay: 0.35 }}
+                className="absolute inset-0"
+              >
+                <motion.div
+                  initial={{ scale: 1.35 }}
+                  animate={ready ? { scale: 1 } : undefined}
+                  transition={{ duration: 1.9, ease: EASE_EXPO, delay: 0.35 }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={heroPhoto}
+                    alt="Rosca — Développeur Web & Mobile"
+                    fill
+                    preload
+                    placeholder="blur"
+                    data-hero-image
+                    sizes="(min-width: 1024px) 32vw, 90vw"
+                    className="object-cover object-top"
+                  />
+                </motion.div>
+                <div className="absolute inset-0 bg-linear-to-t from-ink/75 via-transparent to-transparent" />
+                <div className="absolute inset-x-5 bottom-5 flex items-end justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-bone/85">
+                  <span>Rosca MB</span>
+                  <span>Web · Mobile · IA</span>
+                </div>
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ scale: 0, rotate: -120 }}
+              animate={ready ? { scale: 1, rotate: 0 } : undefined}
+              transition={{ duration: 1.3, ease: EASE_EXPO, delay: 1.05 }}
+              className="absolute -left-4 top-8 sm:-left-10 lg:-left-16"
+            >
+              <Magnetic strength={0.4}>
+                <Link
+                  href="/contact"
+                  aria-label="Disponible pour de nouveaux projets — me contacter"
+                  className="group relative flex h-28 w-28 items-center justify-center rounded-full bg-ember text-ink sm:h-36 sm:w-36"
+                >
+                  <svg viewBox="0 0 100 100" aria-hidden="true" className="animate-spin-slow absolute inset-0 h-full w-full">
+                    <defs>
+                      <path id="hero-badge-circle" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0" />
+                    </defs>
+                    <text className="fill-ink font-mono text-[8.4px] uppercase" letterSpacing="2.1">
+                      <textPath href="#hero-badge-circle">Disponible • Nouveaux projets • </textPath>
+                    </text>
+                  </svg>
+                  <ArrowDownRight className="h-8 w-8 transition-transform duration-500 ease-expo group-hover:-rotate-90" />
+                </Link>
+              </Magnetic>
+            </motion.div>
+          </motion.div>
         </div>
 
-        {/* Floating Badge 1: Web */}
-        <motion.div
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-3 -left-4 sm:-left-6 flex items-center gap-2 rounded-2xl border border-white/80 bg-white/90 px-3.5 py-2 shadow-lg backdrop-blur-md"
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#D9491F]/10 text-[#D9491F]">
-            <Code2 className="h-4 w-4" />
-          </div>
-          <div>
-            <p className="text-xs font-bold text-text">Web Fullstack</p>
-            <p className="text-[10px] text-muted">React et JavaScript</p>
-          </div>
-        </motion.div>
+        <div className="relative z-10 mt-12 grid gap-8 border-t border-bone/10 pt-7 lg:grid-cols-12 lg:items-center lg:gap-6">
+          <motion.p {...appear(0.85)} className="max-w-md text-base leading-relaxed text-smoke lg:col-span-5">
+            Développeur <strong className="font-medium text-bone">Fullstack Web &amp; Mobile</strong> — Je façonne des
+            applications performantes, élégantes et sur-mesure pour transformer vos idées en réalité.
+          </motion.p>
 
-        {/* Floating Badge 2: Mobile */}
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute -bottom-2 -right-4 sm:-right-6 flex items-center gap-2 rounded-2xl border border-white/80 bg-white/90 px-3.5 py-2 shadow-lg backdrop-blur-md"
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600">
-            <Smartphone className="h-4 w-4" />
-          </div>
-          <div>
-            <p className="text-xs font-bold text-text">App Mobile</p>
-            <p className="text-[10px] text-muted">Flutter et Dart</p>
-          </div>
-        </motion.div>
+          <motion.ul {...appear(0.95)} className="flex flex-wrap gap-2 lg:col-span-3">
+            {highlights.map((item) => (
+              <li key={item} className="rounded-full border border-bone/15 px-3.5 py-1.5 text-xs text-bone/80">
+                {item}
+              </li>
+            ))}
+          </motion.ul>
 
-        {/* Floating Badge 3: IA & APIs */}
-        <motion.div
-          animate={{ x: [0, 6, 0] }}
-          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          className="absolute top-1/2 -right-6 sm:-right-10 -translate-y-1/2 hidden sm:flex items-center gap-2 rounded-2xl border border-white/80 bg-white/90 px-3 py-1.5 shadow-md backdrop-blur-md"
-        >
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600">
-            <Cpu className="h-3.5 w-3.5" />
-          </div>
-          <span className="text-xs font-bold text-text">Agents IA & APIs</span>
-        </motion.div>
-      </motion.div>
+          <motion.div {...appear(1.05)} className="flex flex-wrap items-center gap-6 lg:col-span-4 lg:justify-end">
+            <Magnetic strength={0.25}>
+              <Link
+                href="/portfolio"
+                className="group flex items-center gap-3 rounded-full bg-bone py-2 pl-6 pr-2 text-sm font-semibold text-ink transition-colors duration-500 hover:bg-ember"
+              >
+                <RollText>Voir mes réalisations</RollText>
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-ink text-bone transition-transform duration-500 group-hover:rotate-45">
+                  <ArrowUpRight className="h-4 w-4" />
+                </span>
+              </Link>
+            </Magnetic>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="text-sm font-semibold text-bone">
+              <span className="link-underline pb-0.5">Discutons →</span>
+            </a>
+          </motion.div>
+        </div>
+      </div>
     </section>
   );
 }
-

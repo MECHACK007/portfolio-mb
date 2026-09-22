@@ -1,4 +1,4 @@
-import { GraduationCap, Award } from "lucide-react";
+import { FadeIn } from "@/app/components/ui/Reveal";
 
 type Diploma = {
   period: string;
@@ -31,43 +31,42 @@ const formations: Diploma[] = [
 export default function Formation() {
   return (
     <div className="w-full">
-      <div className="mb-6 flex items-center justify-between">
-        <span className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/20 bg-[#FBE8DD]/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#D9491F]">
-          <GraduationCap className="h-4 w-4 text-[#D9491F]" />
-          Diplômes &amp; Formations
+      <div className="flex items-end justify-between gap-4 border-b border-bone/10 pb-5">
+        <h3 className="text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
+          Diplômes &amp; <span className="font-serif font-normal italic tracking-[-0.02em] text-ember">formations</span>
+        </h3>
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
+          {String(formations.length).padStart(2, "0")} titres
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
-        {formations.map((f) => (
-          <div
-            key={f.title}
-            className="group rounded-3xl border border-[#D9491F]/15 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#D9491F]/30 hover:shadow-md"
-          >
-            <div className="flex items-start justify-between gap-4 mb-2">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FBE8DD] text-[#D9491F]">
-                  <Award className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold text-text group-hover:text-[#D9491F] transition-colors">
-                    {f.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm font-medium text-muted">{f.school}</p>
-                </div>
-              </div>
-              <span className="shrink-0 rounded-full bg-[#FBE8DD] px-3 py-1 text-[11px] font-semibold text-[#D9491F]">
-                {f.period}
+      <ul>
+        {formations.map((formation, index) => (
+          <li key={formation.title} className="group relative overflow-hidden border-b border-bone/10">
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 origin-bottom scale-y-0 bg-ink-2 transition-transform duration-700 ease-expo group-hover:scale-y-100"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-y-0 left-0 w-[3px] origin-top scale-y-0 bg-ember transition-transform delay-100 duration-700 ease-expo group-hover:scale-y-100"
+            />
+            <FadeIn delay={index * 0.08} className="relative grid gap-3 py-8 sm:grid-cols-12 sm:gap-6 sm:px-5">
+              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ember sm:col-span-3 sm:pt-2">
+                {formation.period}
               </span>
-            </div>
-
-            <p className="mt-3 text-xs sm:text-sm leading-relaxed text-muted pl-13">
-              {f.detail}
-            </p>
-          </div>
+              <div className="sm:col-span-9">
+                <div className="flex items-start justify-between gap-4">
+                  <h4 className="text-xl font-bold tracking-[-0.03em] sm:text-2xl">{formation.title}</h4>
+                  <span className="mt-1.5 font-mono text-[11px] text-smoke">0{index + 1}</span>
+                </div>
+                <p className="mt-1 text-sm text-bone/70">{formation.school}</p>
+                <p className="mt-3 text-sm leading-relaxed text-smoke">{formation.detail}</p>
+              </div>
+            </FadeIn>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
-

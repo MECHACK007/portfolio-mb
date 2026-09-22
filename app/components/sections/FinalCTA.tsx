@@ -1,71 +1,84 @@
 "use client";
 
-import { MessageCircle, Mail, Sparkles, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { Mail, MessageCircle } from "lucide-react";
+import Magnetic from "@/app/components/ui/Magnetic";
+import { FadeIn, RevealLines } from "@/app/components/ui/Reveal";
+import { CONTACT_EMAIL, whatsappUrl } from "@/app/lib/contact";
 
 export default function FinalCTA() {
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "242065147072";
-  const waMessage = encodeURIComponent("Bonjour Rosca, j'ai un projet web/mobile à vous soumettre.");
+  const waHref = whatsappUrl("Bonjour Rosca, j'ai un projet web/mobile à vous soumettre.");
 
   return (
-    <section className="relative mx-auto max-w-6xl px-6 py-16 sm:py-24">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#D9491F] via-[#E85D35] to-[#992506] px-8 py-16 text-center shadow-[0_30px_90px_-25px_rgba(217,73,31,0.5)] sm:px-16 sm:py-20"
-      >
-        {/* Decorative Grid Pattern */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.08]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
-            backgroundSize: "24px 24px",
-          }}
-        />
+    <section className="relative px-2 py-2 sm:px-4 sm:py-4">
+      <div className="relative overflow-hidden rounded-[2rem] bg-ember text-ink sm:rounded-[3rem]">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          className="animate-spin-slow pointer-events-none absolute -right-[18%] -top-[25%] h-[75vw] max-h-[60rem] w-[75vw] max-w-[60rem] text-ink/[0.07]"
+        >
+          <path d="M12 0l2.6 9.4L24 12l-9.4 2.6L12 24l-2.6-9.4L0 12l9.4-2.6z" />
+        </svg>
 
-        {/* Ambient Blur circles */}
-        <div className="pointer-events-none absolute -left-20 -top-20 h-60 w-60 rounded-full bg-amber-400/20 blur-3xl" />
-        <div className="pointer-events-none absolute -right-20 -bottom-20 h-60 w-60 rounded-full bg-white/10 blur-3xl" />
-
-        <div className="relative mx-auto max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md">
-            <Sparkles className="h-3.5 w-3.5" />
-            Demande de devis &amp; Echange
+        <div className="container-x relative py-20 sm:py-32">
+          <div className="flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.22em] text-ink/70">
+            <span className="flex items-center gap-3">
+              <span className="h-px w-10 bg-ink/40" />
+              Demande de devis &amp; Échange
+            </span>
+            <span>Réponse rapide</span>
           </div>
 
-          <h2 className="mt-6 text-3xl font-black leading-tight text-white sm:text-5xl lg:text-[3.5rem] tracking-tight">
-            Un projet en tête ?<br />
-            <span className="underline decoration-white/30 underline-offset-8">Concrétisons-le</span> ensemble.
-          </h2>
+          <RevealLines
+            as="h2"
+            className="mt-12 text-[clamp(2.7rem,8.4vw,9.5rem)] font-bold leading-[0.88] tracking-[-0.055em]"
+            lines={[
+              "Un projet en tête ?",
+              <span key="accent">
+                Concrétisons-le <span className="font-serif font-normal italic tracking-[-0.02em]">ensemble.</span>
+              </span>,
+            ]}
+          />
 
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/90 sm:text-lg">
-            Un besoin web, mobile ou une intégration sur-mesure ? Je réponds rapidement avec une analyse claire et une proposition adaptée à vos objectifs.
-          </p>
+          <div className="mt-16 grid items-end gap-12 lg:grid-cols-12">
+            <FadeIn className="lg:col-span-6">
+              <p className="max-w-md text-lg leading-relaxed text-ink/80">
+                Un besoin web, mobile ou une intégration sur-mesure&nbsp;? Je réponds rapidement avec une analyse claire et une
+                proposition adaptée à vos objectifs.
+              </p>
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="mt-8 inline-flex items-center gap-3 font-display text-xl font-semibold tracking-tight sm:text-2xl"
+              >
+                <Mail className="h-5 w-5" />
+                <span className="link-underline pb-0.5">Envoyer un email</span>
+              </a>
+            </FadeIn>
 
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
-            <a
-              href={`https://wa.me/${phone}?text=${waMessage}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full bg-white px-8 py-4 text-base font-bold text-[#D9491F] shadow-xl shadow-black/10 transition-all duration-300 hover:-translate-y-1 hover:bg-[#FFF7F0] hover:shadow-2xl"
-            >
-              <MessageCircle className="h-5 w-5 text-[#D9491F]" />
-              Discuter sur WhatsApp
-            </a>
-            <a
-              href="mailto:roscabangoulou@icloud.com"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:border-white hover:bg-white/20"
-            >
-              <Mail className="h-5 w-5 text-white" />
-              Envoyer un email
-            </a>
+            <div className="flex lg:col-span-6 lg:justify-end">
+              <Magnetic strength={0.45}>
+                <a
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative flex h-44 w-44 flex-col items-center justify-center gap-2 overflow-hidden rounded-full bg-ink text-bone sm:h-56 sm:w-56"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 translate-y-full rounded-full bg-bone transition-transform duration-700 ease-expo group-hover:translate-y-0"
+                  />
+                  <MessageCircle className="relative h-7 w-7 transition-colors duration-500 group-hover:text-ink" />
+                  <span className="relative text-center font-display text-lg font-semibold leading-tight tracking-tight transition-colors duration-500 group-hover:text-ink">
+                    Discuter sur
+                    <br />
+                    WhatsApp
+                  </span>
+                </a>
+              </Magnetic>
+            </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
-

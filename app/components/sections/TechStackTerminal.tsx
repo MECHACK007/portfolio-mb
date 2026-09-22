@@ -1,46 +1,47 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { motion, Variants } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import {
-  Terminal,
-  Copy,
+  Atom,
   Check,
-  Sparkles,
-  Code2,
+  Cloud,
+  CodeXml,
+  Copy,
+  Cpu,
+  Database,
+  Feather,
+  FileCode,
+  Flame,
+  GitBranch,
+  Package,
+  RotateCcw,
+  Send,
   Server,
   Smartphone,
+  Sparkles,
   Wrench,
-  Zap,
-  Atom,
-  FileCode,
-  Feather,
-  RotateCcw,
-  CreditCard,
-  Flame,
-  Database,
-  GitBranch,
-  Cloud,
-  Send,
-  Cpu,
-  Package,
+  type LucideIcon,
 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { cn } from "@/app/lib/cn";
+import { EASE_EXPO, FadeIn, RevealLines } from "@/app/components/ui/Reveal";
+import SectionLabel from "@/app/components/ui/SectionLabel";
 
 type StackCategory = {
   id: string;
   name: string;
-  icon: React.ComponentType<{ className?: string }>;
-  items: { name: string; level: string; icon: React.ComponentType<{ className?: string }> }[];
+  icon: LucideIcon;
+  items: { name: string; level: string; icon: LucideIcon }[];
 };
 
 const stackCategories: StackCategory[] = [
   {
     id: "frontend",
     name: "Frontend Web",
-    icon: Code2,
+    icon: CodeXml,
     items: [
       { name: "React 19", level: "Moyen", icon: Atom },
-      { name: "JavaScript", level: "Débutant", icon: Code2 },
+      { name: "JavaScript", level: "Débutant", icon: CodeXml },
       { name: "TypeScript", level: "Débutant", icon: FileCode },
       { name: "Tailwind CSS v4", level: "Moyen", icon: Feather },
       { name: "Framer Motion", level: "Moyen", icon: Sparkles },
@@ -60,10 +61,10 @@ const stackCategories: StackCategory[] = [
     name: "Backend & Cloud",
     icon: Server,
     items: [
-      { name: "Node.js & Express", level: "Moyen", icon: Code2 },
+      { name: "Node.js & Express", level: "Moyen", icon: CodeXml },
       { name: "REST APIs", level: "Moyen", icon: RotateCcw },
-      { name: "Laravel", level: "Moyen", icon: Code2 },
-      { name: "PHP", level: "Moyen", icon: Code2 },
+      { name: "Laravel", level: "Moyen", icon: CodeXml },
+      { name: "PHP", level: "Moyen", icon: CodeXml },
       { name: "MySQL & PostgreSQL", level: "Moyen", icon: Database },
       { name: "Docker", level: "Moyen", icon: Package },
     ],
@@ -81,31 +82,39 @@ const stackCategories: StackCategory[] = [
   },
 ];
 
-export default function TechStackTerminal(): React.JSX.Element {
+const LEVEL_FILL: Record<string, number> = { Débutant: 0.38, Moyen: 0.66, Avancé: 0.9 };
+const FULL_COMMAND = "rosca --show-stack --format json";
+const totalTools = stackCategories.reduce((sum, category) => sum + category.items.length, 0);
+
+const listVariants: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+};
+
+const blockVariants: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE_EXPO } },
+};
+
+export default function TechStackTerminal({ index = "05" }: { index?: string }) {
   const [activeTab, setActiveTab] = useState<string>("all");
   const [copied, setCopied] = useState(false);
   const [typed, setTyped] = useState("");
   const [typingFinished, setTypingFinished] = useState(false);
-  const fullCommand = "rosca --show-stack --format json";
   const hasTriggered = useRef(false);
+  const intervalRef = useRef<number | undefined>(undefined);
 
-  useEffect(() => {
-    return () => {
-      hasTriggered.current = true;
-    };
-  }, []);
+  useEffect(() => () => window.clearInterval(intervalRef.current), []);
 
   function startTyping() {
     if (hasTriggered.current) return;
     hasTriggered.current = true;
-    setTyped("");
-    setTypingFinished(false);
     let i = 0;
-    const id = setInterval(() => {
+    intervalRef.current = window.setInterval(() => {
       i += 1;
-      setTyped(fullCommand.slice(0, i));
-      if (i >= fullCommand.length) {
-        clearInterval(id);
+      setTyped(FULL_COMMAND.slice(0, i));
+      if (i >= FULL_COMMAND.length) {
+        window.clearInterval(intervalRef.current);
         setTypingFinished(true);
       }
     }, 35);
@@ -113,157 +122,162 @@ export default function TechStackTerminal(): React.JSX.Element {
 
   const copyToClipboard = () => {
     const text = stackCategories
-      .map((cat) => `${cat.name}: ${cat.items.map((i) => i.name).join(", ")}`)
+      .map((category) => `${category.name}: ${category.items.map((item) => item.name).join(", ")}`)
       .join("\n");
     navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    window.setTimeout(() => setCopied(false), 2000);
   };
 
   const filteredCategories =
-    activeTab === "all"
-      ? stackCategories
-      : stackCategories.filter((cat) => cat.id === activeTab);
+    activeTab === "all" ? stackCategories : stackCategories.filter((category) => category.id === activeTab);
+
+  const filters = [{ id: "all", name: "Tout afficher" }, ...stackCategories];
 
   return (
-    <section className="relative mx-auto max-w-5xl px-6 py-20 md:py-28 overflow-hidden">
-      {/* Header */}
-      <div className="mb-12 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/20 bg-[#FBE8DD]/60 px-4 py-1.5 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#D9491F]"
-        >
-          <Terminal className="h-3.5 w-3.5" />
-          Stack &amp; Outils
-        </motion.div>
+    <section className="relative mx-2 overflow-clip rounded-[2rem] bg-bone py-24 text-ink sm:mx-4 sm:rounded-[3rem] sm:py-32">
+      <div className="container-x grid gap-14 lg:grid-cols-12 lg:gap-12">
+        <div className="lg:col-span-4">
+          <div className="lg:sticky lg:top-28">
+            <SectionLabel index={index} tone="light">
+              Stack &amp; Outils
+            </SectionLabel>
+            <RevealLines
+              as="h2"
+              className="mt-8 text-[clamp(2.4rem,4.6vw,4.8rem)] font-bold leading-[0.9] tracking-[-0.05em]"
+              lines={[
+                "Terminal &",
+                <span key="accent" className="font-serif font-normal italic tracking-[-0.02em] text-rust">
+                  technologies.
+                </span>,
+              ]}
+            />
 
-        <motion.h2
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mt-4 text-3xl sm:text-4xl md:text-5xl font-black text-text tracking-tight"
-        >
-          Terminal &amp; <span className="framed-accent text-[#D9491F]">Technologies</span>
-        </motion.h2>
-
-        {/* Filter Pills */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
-          <button
-            onClick={() => setActiveTab("all")}
-            className={`rounded-full px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
-              activeTab === "all"
-                ? "bg-[#D9491F] text-white shadow-md shadow-[#D9491F]/20"
-                : "bg-white border border-[#D9491F]/15 text-muted hover:text-text hover:bg-gray-50"
-            }`}
-          >
-            Tout afficher
-          </button>
-          {stackCategories.map((cat) => {
-            const Icon = cat.icon;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveTab(cat.id)}
-                className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs sm:text-sm font-semibold transition-all ${
-                  activeTab === cat.id
-                    ? "bg-[#D9491F] text-white shadow-md shadow-[#D9491F]/20"
-                    : "bg-white border border-[#D9491F]/15 text-muted hover:text-text hover:bg-gray-50"
-                }`}
-              >
-                <Icon className="h-3.5 w-3.5" />
-                {cat.name}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Terminal Container */}
-      <div className="relative">
-        <div className="overflow-hidden rounded-3xl border border-black/10 bg-[#16171B] shadow-2xl shadow-black/20">
-          {/* Header Bar */}
-          <div className="flex items-center justify-between bg-[#22242A] px-5 py-3.5 border-b border-white/5">
-            <div className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-full bg-[#FF5F57]" />
-              <span className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
-              <span className="h-3 w-3 rounded-full bg-[#28C840]" />
-              <span className="ml-2 font-mono text-xs text-gray-400">bash — rosca@dev-terminal</span>
-            </div>
-
-            <button
-              onClick={copyToClipboard}
-              className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-1 text-xs text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
-            >
-              {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-              <span>{copied ? "Copié !" : "Copier"}</span>
-            </button>
-          </div>
-
-          {/* Terminal Content Body */}
-          <div className="p-6 sm:p-8 font-mono text-sm leading-relaxed text-gray-200">
-            {/* Prompt line */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              onViewportEnter={() => startTyping()}
-              className="flex items-center gap-2 text-xs sm:text-sm mb-6 pb-4 border-b border-white/10"
-            >
-              <span className="text-[#D9491F] font-bold">rosca@portfolio</span>
-              <span className="text-gray-500">:~$</span>
-              <span className="text-emerald-400 font-semibold">{typed}</span>
-              <span
-                className={`inline-block h-4 w-2 bg-[#D9491F] ${
-                  typingFinished ? "animate-blink" : ""
-                }`}
-              />
-            </motion.div>
-
-            {/* Stack list */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredCategories.map((category) => (
-                <div
-                  key={category.id}
-                  className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm transition-all hover:border-[#D9491F]/40"
-                >
-                  <div className="flex items-center gap-2 mb-4 text-[#D9491F]">
-                    <category.icon className="h-4 w-4" />
-                    <h3 className="font-sans font-bold text-base text-white">{category.name}</h3>
-                  </div>
-
-                  <div className="space-y-2.5">
-                    {category.items.map((item) => (
-                      <div key={item.name} className="flex items-center justify-between text-xs sm:text-sm">
-                        <div className="flex items-center gap-2">
-                          <item.icon className="h-4 w-4" />
-                          <span className="font-semibold text-gray-200">{item.name}</span>
-                        </div>
-                        <span className="rounded-md bg-white/10 px-2 py-0.5 text-[10px] font-mono text-[#D9491F]">
-                          {item.level}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Status Footer line */}
-            <div className="mt-8 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-gray-400">
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Statut : Prêt pour déploiement &amp; intégration</span>
+            <div className="mt-10 grid grid-cols-2 border-y border-ink/15">
+              <div className="border-r border-ink/15 py-5 pr-4">
+                <p className="font-display text-5xl font-bold tracking-[-0.06em]">{totalTools}</p>
+                <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-stone">Outils</p>
               </div>
-              <span className="text-gray-500">Rosca Fullstack Dev v2.0</span>
+              <div className="py-5 pl-5">
+                <p className="font-display text-5xl font-bold tracking-[-0.06em]">
+                  {String(stackCategories.length).padStart(2, "0")}
+                </p>
+                <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.2em] text-stone">Catégories</p>
+              </div>
+            </div>
+
+            <div role="group" aria-label="Filtrer la stack" className="mt-8 flex flex-wrap gap-2">
+              {filters.map((filter) => {
+                const active = activeTab === filter.id;
+                return (
+                  <button
+                    key={filter.id}
+                    type="button"
+                    onClick={() => setActiveTab(filter.id)}
+                    aria-pressed={active}
+                    className={cn(
+                      "rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-300",
+                      active ? "border-ink bg-ink text-bone" : "border-ink/20 text-ink hover:border-ink"
+                    )}
+                  >
+                    {filter.name}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
+
+        <FadeIn className="lg:col-span-8">
+          <div className="overflow-hidden rounded-[1.5rem] bg-ink text-bone shadow-[0_50px_120px_-40px_rgba(11,11,12,0.6)]">
+            <div className="flex items-center justify-between border-b border-bone/10 bg-ink-2 px-5 py-3.5">
+              <div className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-[#FF5F57]" />
+                <span className="h-3 w-3 rounded-full bg-[#FEBC2E]" />
+                <span className="h-3 w-3 rounded-full bg-[#28C840]" />
+                <span className="ml-3 hidden font-mono text-xs text-smoke sm:inline">bash — rosca@dev-terminal</span>
+              </div>
+              <button
+                type="button"
+                onClick={copyToClipboard}
+                className="flex items-center gap-1.5 rounded-full border border-bone/15 px-3 py-1 font-mono text-xs text-bone/80 transition-colors hover:border-ember hover:text-ember"
+              >
+                {copied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                <span>{copied ? "Copié !" : "Copier"}</span>
+              </button>
+            </div>
+
+            <div className="p-5 font-mono text-[13px] leading-relaxed sm:p-8">
+              <motion.div
+                onViewportEnter={startTyping}
+                viewport={{ once: true, amount: 0.6 }}
+                className="flex flex-wrap items-center gap-x-2 border-b border-bone/10 pb-5"
+              >
+                <span className="text-ember">rosca@portfolio</span>
+                <span className="text-smoke">:~$</span>
+                <span className="text-emerald-400">
+                  {typed}
+                  {typingFinished && activeTab !== "all" && <span className="text-bone/70"> --only {activeTab}</span>}
+                </span>
+                <span className={cn("inline-block h-4 w-2 bg-ember", typingFinished && "animate-blink")} />
+              </motion.div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  variants={listVariants}
+                  initial="hidden"
+                  animate={typingFinished ? "show" : "hidden"}
+                  exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                  className="mt-7 grid gap-x-10 gap-y-9 md:grid-cols-2"
+                >
+                  {filteredCategories.map((category) => (
+                    <motion.div key={category.id} variants={blockVariants}>
+                      <div className="mb-4 flex items-center gap-2">
+                        <span className="text-ember">▸</span>
+                        <category.icon className="h-4 w-4 text-ember" />
+                        <span className="font-sans text-[15px] font-semibold text-bone">{category.name}</span>
+                        <span className="text-smoke">[{category.items.length}]</span>
+                      </div>
+                      <ul className="space-y-3">
+                        {category.items.map((item) => (
+                          <li key={item.name} className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1.5">
+                            <span className="flex items-center gap-2 text-bone/90">
+                              <item.icon className="h-3.5 w-3.5 text-smoke" />
+                              {item.name}
+                            </span>
+                            <span className="text-[11px] text-ember">{item.level}</span>
+                            <span className="col-span-2 h-[3px] overflow-hidden rounded-full bg-bone/10">
+                              <motion.span
+                                className="block h-full origin-left rounded-full bg-linear-to-r from-ember-deep to-ember"
+                                variants={{
+                                  hidden: { scaleX: 0 },
+                                  show: {
+                                    scaleX: LEVEL_FILL[item.level] ?? 0.5,
+                                    transition: { duration: 1.2, ease: EASE_EXPO, delay: 0.15 },
+                                  },
+                                }}
+                              />
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+
+              <div className="mt-9 flex flex-wrap items-center justify-between gap-3 border-t border-bone/10 pt-5 text-xs text-smoke">
+                <span className="flex items-center gap-2">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+                  Statut : Prêt pour déploiement &amp; intégration
+                </span>
+                <span>Rosca Fullstack Dev v2.0</span>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
 }
-

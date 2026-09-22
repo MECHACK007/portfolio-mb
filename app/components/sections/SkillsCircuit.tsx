@@ -1,27 +1,29 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight, Bot, CodeXml, Plug, Smartphone, type LucideIcon } from "lucide-react";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Code2,
-  Smartphone,
-  Plug,
-  Bot,
-  Cpu,
-  Sparkles,
-  Zap,
-  CheckCircle2,
-  ArrowUpRight,
-  ShieldCheck,
-  Layers,
-  Activity,
-} from "lucide-react";
+import { cn } from "@/app/lib/cn";
+import { EASE_EXPO, FadeIn, RevealLines } from "@/app/components/ui/Reveal";
+import SectionLabel from "@/app/components/ui/SectionLabel";
 
-const domains = [
+type Domain = {
+  id: string;
+  idx: string;
+  icon: LucideIcon;
+  title: string;
+  subtitle: string;
+  desc: string;
+  metrics: { score: string; label: string };
+  techs: { name: string; tag: string }[];
+  highlights: string[];
+};
+
+const domains: Domain[] = [
   {
     id: "web",
     idx: "01",
-    icon: Code2,
+    icon: CodeXml,
     title: "Frontend Web Modern",
     subtitle: "Web Application & SSR High Performance",
     desc: "Conception de Web Apps sur-mesure ultra réactives, optimisées SEO, avec des temps de chargement éclair et une expérience utilisateur sans couture.",
@@ -39,8 +41,6 @@ const domains = [
       "SSR / SSG pour un référencement Google maximal",
       "Animations fluides 60 FPS avec Framer Motion",
     ],
-    accentColor: "from-[#D9491F] via-[#E85D35] to-amber-500",
-    badgeBg: "bg-[#FBE8DD] text-[#D9491F]",
   },
   {
     id: "mobile",
@@ -62,8 +62,6 @@ const domains = [
       "Paiements Mobile Money automatisés et sécurisés",
       "Mode offline-first avec synchronisation automatique",
     ],
-    accentColor: "from-[#D9491F] via-orange-500 to-amber-500",
-    badgeBg: "bg-[#FBE8DD] text-[#D9491F]",
   },
   {
     id: "backend",
@@ -82,19 +80,17 @@ const domains = [
       { name: "Docker", tag: "Containers" },
     ],
     highlights: [
-      "Securité renforcée (JWT, CORS, Rate Limiting, Sanitization)",
+      "Sécurité renforcée (JWT, CORS, Rate Limiting, Sanitization)",
       "Gestion optimisée des bases de données relationnelles",
       "Déploiement containerisé et CI/CD automatisé",
     ],
-    accentColor: "from-amber-600 via-[#D9491F] to-rose-600",
-    badgeBg: "bg-amber-100 text-amber-900",
   },
   {
     id: "ai",
     idx: "04",
     icon: Bot,
     title: "IA, Prompting & Automation",
-    subtitle: "Workflows Intelligents & Modèles Generatifs",
+    subtitle: "Workflows Intelligents & Modèles Génératifs",
     desc: "Intégration de modèles de langage avancés (OpenAI / Claude) dans vos outils métier pour automatiser les tâches répétitives et booster la productivité.",
     metrics: { score: "10x", label: "Productivité Boostée" },
     techs: [
@@ -109,210 +105,162 @@ const domains = [
       "Fine-tuning des prompts pour des résultats ultra précis",
       "Pipelines d'automatisation d'actions répétitives",
     ],
-    accentColor: "from-emerald-600 via-teal-500 to-[#D9491F]",
-    badgeBg: "bg-emerald-100 text-emerald-900",
   },
 ];
 
-export default function SkillsCircuit() {
+export default function SkillsCircuit({ index = "02" }: { index?: string }) {
   const [selectedDomain, setSelectedDomain] = useState<string>("web");
-
-  const current = domains.find((d) => d.id === selectedDomain) || domains[0];
+  const current = domains.find((d) => d.id === selectedDomain) ?? domains[0];
 
   return (
-    <section className="relative mx-auto max-w-6xl px-6 py-20 md:py-28 overflow-hidden">
-      {/* Dynamic Background Glow circles */}
-      <div className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 h-[600px] w-[600px] rounded-full bg-gradient-to-tr from-[#D9491F]/15 via-amber-500/10 to-transparent blur-[140px]" />
+    <section className="relative mx-2 overflow-clip rounded-[2rem] bg-bone py-24 text-ink sm:mx-4 sm:rounded-[3rem] sm:py-32">
+      <div className="container-x">
+        <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
+          <div className="lg:col-span-8">
+            <SectionLabel index={index} tone="light">
+              Écosystème &amp; Expertise Technologique
+            </SectionLabel>
+            <RevealLines
+              as="h2"
+              className="mt-8 text-[clamp(2.4rem,6vw,6rem)] font-bold leading-[0.9] tracking-[-0.05em]"
+              lines={[
+                "Domaines de",
+                <span key="accent">
+                  <span className="pr-[0.14em] font-serif font-normal italic tracking-[-0.02em] text-rust">maîtrise</span> &amp; impact
+                </span>,
+              ]}
+            />
+          </div>
+          <FadeIn className="text-lg leading-relaxed text-stone lg:col-span-4">
+            Une ingénierie logicielle complète pour concrétiser des idées ambitieuses avec performance et élégance.
+          </FadeIn>
+        </div>
 
-      {/* Header */}
-      <div className="mb-16 text-center relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/25 bg-white/80 backdrop-blur-md px-4 py-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-[#D9491F] shadow-sm"
-        >
-          <Sparkles className="h-4 w-4 text-[#D9491F] animate-pulse" />
-          Écosystème &amp; Expertise Technologique
-        </motion.div>
-
-        <motion.h2
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mt-5 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-text tracking-tight leading-tight"
-        >
-          Domaines de <span className="framed-accent text-[#D9491F]">Maîtrise &amp; Impact</span>
-        </motion.h2>
-        <p className="mt-4 max-w-2xl mx-auto text-muted text-base sm:text-lg leading-relaxed">
-          Une ingénierie logicielle complète pour concrétiser des idées ambitieuses avec performance et élégance.
-        </p>
-      </div>
-
-      {/* Interactive Tabs Selector */}
-      <div className="mb-10 flex flex-wrap items-center justify-center gap-2.5 relative z-10">
-        {domains.map((d) => {
-          const Icon = d.icon;
-          const isActive = selectedDomain === d.id;
-          return (
-            <button
-              key={d.id}
-              onClick={() => setSelectedDomain(d.id)}
-              className={`group relative flex items-center gap-2.5 rounded-2xl px-5 py-3 text-xs sm:text-sm font-bold transition-all duration-300 ${
-                isActive
-                  ? "bg-[#D9491F] text-white shadow-xl shadow-[#D9491F]/30 scale-105"
-                  : "bg-white/80 border border-black/10 text-text hover:bg-white hover:border-[#D9491F]/30 hover:shadow-md"
-              }`}
-            >
-              <Icon className={`h-4 w-4 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-white" : "text-[#D9491F]"}`} />
-              <span>{d.title.split(" ")[0]} {d.title.split(" ")[1] || ""}</span>
-              {isActive && (
-                <motion.span
-                  layoutId="activeTabBadge"
-                  className="ml-1 inline-block h-2 w-2 rounded-full bg-white animate-ping"
-                />
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Active Domain Detailed Spotlight Card (Bento Spotlight) */}
-      <div className="relative z-10 mb-14">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="rounded-[2.5rem] border border-[#D9491F]/20 bg-gradient-to-br from-white via-[#FFF8F2] to-white p-8 sm:p-12 shadow-2xl shadow-[#D9491F]/10 relative overflow-hidden"
-          >
-            {/* Top Accent Stripe */}
-            <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${current.accentColor}`} />
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Left Column: Domain Details */}
-              <div className="lg:col-span-7 space-y-6">
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#D9491F] text-white shadow-lg shadow-[#D9491F]/25">
-                    <current.icon className="h-7 w-7" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-mono font-black text-[#D9491F] tracking-widest uppercase">
-                      DOMAINE {current.idx}
-                    </span>
-                    <h3 className="text-2xl sm:text-3xl font-black text-text tracking-tight">
-                      {current.title}
-                    </h3>
-                  </div>
-                </div>
-
-                <p className="text-base sm:text-lg leading-relaxed text-muted font-normal">
-                  {current.desc}
-                </p>
-
-                {/* Highlights List */}
-                <div className="space-y-2.5 pt-2">
-                  {current.highlights.map((item, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-[#D9491F] shrink-0 mt-0.5" />
-                      <span className="text-sm sm:text-base font-semibold text-text">{item}</span>
-                    </div>
-                  ))}
-                </div>
-
-              </div>
-
-              {/* Right Column: Metric Showcase Box */}
-              <div className="lg:col-span-5">
-                <div className="rounded-3xl border border-[#D9491F]/20 bg-gradient-to-br from-[#16171B] to-[#22242A] p-8 text-white shadow-2xl relative overflow-hidden flex flex-col justify-between h-full">
-                  <div className="absolute top-0 right-0 p-8 opacity-10">
-                    <current.icon className="h-40 w-40 text-white" />
-                  </div>
-
-                  <div>
-                    <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-mono text-[#D9491F]">
-                      <Activity className="h-3.5 w-3.5 text-emerald-400 animate-pulse" />
-                      <span>Standard de Qualité</span>
-                    </div>
-
-                    <div className="mt-8">
-                      <span className="text-5xl sm:text-6xl font-black text-white font-mono tracking-tight block">
-                        {current.metrics.score}
-                      </span>
-                      <span className="mt-2 block text-sm font-semibold text-gray-300">
-                        {current.metrics.label}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="mt-10 pt-6 border-t border-white/10 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <ShieldCheck className="h-5 w-5 text-emerald-400" />
-                      <span className="text-xs text-gray-300 font-medium">Production Ready</span>
-                    </div>
-                    <span className="text-xs font-mono text-gray-400">v2026.1</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* Grid Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
-        {domains.map((d) => {
-          const Icon = d.icon;
-          const isSelected = selectedDomain === d.id;
-          return (
-            <motion.div
-              key={d.id}
-              onClick={() => setSelectedDomain(d.id)}
-              whileHover={{ y: -6 }}
-              className={`cursor-pointer group relative flex flex-col justify-between rounded-3xl p-7 transition-all duration-300 ${
-                isSelected
-                  ? "border-2 border-[#D9491F] bg-white shadow-xl shadow-[#D9491F]/15"
-                  : "border border-black/10 bg-white/90 hover:border-[#D9491F]/40 hover:shadow-lg"
-              }`}
-            >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 ${
-                      isSelected
-                        ? "bg-[#D9491F] text-white shadow-md shadow-[#D9491F]/30"
-                        : "bg-[#FBE8DD] text-[#D9491F] group-hover:bg-[#D9491F] group-hover:text-white"
-                    }`}
+        <div className="mt-16 grid gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="lg:col-span-7">
+            {domains.map((domain) => {
+              const active = domain.id === selectedDomain;
+              return (
+                <div key={domain.id} className="border-t border-ink/15 last:border-b">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedDomain(domain.id)}
+                    aria-expanded={active}
+                    className="group flex w-full items-center gap-4 py-6 text-left sm:gap-8 sm:py-8"
                   >
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <span className="font-mono text-xs font-black text-[#D9491F]/60">
-                    {d.idx}
-                  </span>
+                    <span className={cn("font-mono text-xs transition-colors", active ? "text-rust" : "text-stone")}>
+                      {domain.idx}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span
+                        className={cn(
+                          "block font-display text-[clamp(1.6rem,3.4vw,3.3rem)] font-bold leading-[0.95] tracking-[-0.045em] transition-all duration-500 ease-expo",
+                          active ? "text-ink" : "text-ink/35 group-hover:translate-x-2 group-hover:text-ink/70"
+                        )}
+                      >
+                        {domain.title}
+                      </span>
+                      <span className="mt-2 block text-sm text-stone">{domain.subtitle}</span>
+                    </span>
+                    <span
+                      className={cn(
+                        "flex h-12 w-12 shrink-0 items-center justify-center rounded-full border transition-all duration-500 ease-expo",
+                        active ? "rotate-45 border-ink bg-ink text-bone" : "border-ink/20 group-hover:border-ink"
+                      )}
+                    >
+                      <ArrowUpRight className="h-5 w-5" />
+                    </span>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {active && (
+                      <motion.div
+                        key="panel"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.6, ease: EASE_EXPO }}
+                        className="overflow-hidden lg:hidden"
+                      >
+                        <div className="pb-8">
+                          <DomainPanel domain={domain} />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
+              );
+            })}
+          </div>
 
-                <h4 className="text-lg font-bold text-text mb-2 group-hover:text-[#D9491F] transition-colors">
-                  {d.title}
-                </h4>
-                <p className="text-xs text-muted leading-relaxed line-clamp-2">
-                  {d.subtitle}
-                </p>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-black/5 flex items-center justify-between text-xs font-bold text-[#D9491F]">
-                <span>Exploration</span>
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </div>
-            </motion.div>
-          );
-        })}
+          <div className="hidden lg:col-span-5 lg:block">
+            <div className="sticky top-28">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={current.id}
+                  initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -20, filter: "blur(8px)" }}
+                  transition={{ duration: 0.5, ease: EASE_EXPO }}
+                >
+                  <DomainPanel domain={current} />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
+function DomainPanel({ domain }: { domain: Domain }) {
+  const Icon = domain.icon;
+  return (
+    <div className="relative overflow-hidden rounded-[1.75rem] bg-ink p-7 text-bone sm:p-9">
+      <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-ember/30 blur-[90px]" />
 
+      <div className="relative flex items-center justify-between">
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-ember text-ink">
+          <Icon className="h-6 w-6" />
+        </span>
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">Domaine {domain.idx}</span>
+      </div>
+
+      <div className="relative mt-10">
+        <p className="font-display text-[clamp(3.4rem,5.6vw,5.4rem)] font-bold leading-[0.85] tracking-[-0.06em] text-ember">
+          {domain.metrics.score}
+        </p>
+        <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">{domain.metrics.label}</p>
+      </div>
+
+      <p className="relative mt-8 leading-relaxed text-bone/80">{domain.desc}</p>
+
+      <ul className="relative mt-6 space-y-2.5">
+        {domain.highlights.map((item) => (
+          <li key={item} className="flex gap-3 text-sm text-bone/90">
+            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-ember" />
+            {item}
+          </li>
+        ))}
+      </ul>
+
+      <div className="relative mt-8 flex flex-wrap gap-2 border-t border-bone/10 pt-6">
+        {domain.techs.map((tech) => (
+          <span key={tech.name} className="rounded-full border border-bone/15 px-3 py-1.5 text-xs">
+            <span className="text-bone">{tech.name}</span>
+            <span className="ml-1.5 text-smoke">{tech.tag}</span>
+          </span>
+        ))}
+      </div>
+
+      <div className="relative mt-6 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-smoke">
+        <span className="flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+          Production Ready
+        </span>
+        <span>v2026.1</span>
+      </div>
+    </div>
+  );
+}

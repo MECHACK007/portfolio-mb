@@ -1,10 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X, Zap, Send, Sparkles } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/app/lib/cn";
+import Magnetic from "@/app/components/ui/Magnetic";
+import RollText from "@/app/components/ui/RollText";
+import { useScrollLock } from "@/app/components/ui/SmoothScroll";
+import { useIntroReady, useLocalTime } from "@/app/components/ui/hooks";
+import { CONTACT_EMAIL } from "@/app/lib/contact";
 
 const navLinks = [
   { href: "/", label: "Accueil" },
@@ -13,104 +19,173 @@ const navLinks = [
   { href: "/temoignage", label: "Témoignages" },
 ];
 
+const EASE = [0.16, 1, 0.3, 1] as const;
+
 export default function Header() {
-  const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const introReady = useIntroReady();
+  const time = useLocalTime();
+  const { scrollY } = useScroll();
+
+  const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [lastPath, setLastPath] = useState(pathname);
+
+  if (pathname !== lastPath) {
+    setLastPath(pathname);
+    setOpen(false);
+  }
+
+  useScrollLock(open);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    setScrolled(latest > 40);
+    // Smooth-scroll libraries re-emit the same position; only a real move decides visibility.
+    if (Math.abs(latest - previous) < 2) return;
+    setHidden(latest > previous && latest > 280);
+  });
+
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   return (
-    <header className="sticky top-0 z-50 px-4 pt-4 pb-2">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 rounded-full border border-[#D9491F]/15 bg-white/90 px-5 py-3 shadow-[0_12px_40px_-15px_rgba(23,24,26,0.12)] backdrop-blur-xl transition-all">
-        {/* Brand Logo */}
-        <Link href="/" className="group flex items-center gap-2 text-lg font-black tracking-tight text-text">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#D9491F] text-white shadow-md shadow-[#D9491F]/25 transition-transform duration-300 group-hover:scale-110">
-            <Zap className="h-5 w-5 fill-white text-white" />
-          </div>
-          <span className="text-xl font-extrabold text-text">
-            Rosca<span className="text-[#D9491F]">.</span>
-          </span>
-        </Link>
+    <>
+      <motion.header
+        initial={{ y: "-130%" }}
+        animate={introReady ? { y: hidden && !open ? "-130%" : "0%" } : undefined}
+        transition={{ duration: 0.8, ease: EASE }}
+        className="fixed inset-x-0 top-0 z-[120] px-3 pt-3 sm:px-5 sm:pt-4"
+      >
+        <div
+          className={cn(
+            "mx-auto flex max-w-[92rem] items-center justify-between gap-4 rounded-full border py-2 pl-5 pr-2 transition-[background-color,border-color] duration-500",
+            scrolled || open ? "border-bone/10 bg-ink/75 backdrop-blur-xl" : "border-transparent bg-transparent"
+          )}
+        >
+          <Link href="/" aria-label="Rosca — Accueil" className="group flex items-center gap-2.5">
+            <span className="font-display text-2xl font-bold tracking-[-0.05em]">Rosca</span>
+            <span className="h-2 w-2 rounded-full bg-ember transition-transform duration-500 group-hover:scale-[1.8]" />
+            <span className="hidden font-mono text-[10px] uppercase tracking-[0.22em] text-smoke sm:inline">
+              MB©{new Date().getFullYear().toString().slice(2)}
+            </span>
+          </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden items-center gap-1 md:flex bg-[#FBE8DD]/40 border border-[#D9491F]/10 rounded-full p-1">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href;
-            return (
+          <nav aria-label="Navigation principale" className="hidden items-center gap-1 lg:flex">
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "group flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                    active ? "text-bone" : "text-smoke hover:text-bone"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "h-1.5 w-1.5 rounded-full bg-ember transition-all duration-500",
+                      active ? "scale-100 opacity-100" : "scale-0 opacity-0"
+                    )}
+                  />
+                  <RollText>{link.label}</RollText>
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <Magnetic strength={0.2} className="hidden sm:inline-block">
               <Link
-                key={link.href}
-                href={link.href}
-                className={`nav-link text-sm font-medium transition-all ${
-                  isActive
-                    ? "active"
-                    : "text-muted hover:text-text hover:bg-white/60"
-                }`}
-                aria-current={isActive ? "page" : undefined}
+                href="/contact"
+                className="group flex items-center gap-3 rounded-full bg-ember py-2 pl-5 pr-2 text-sm font-semibold text-ink transition-colors duration-500 hover:bg-bone"
               >
-                {link.label}
+                <RollText>Me contacter</RollText>
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-bone transition-transform duration-500 group-hover:rotate-45">
+                  <ArrowUpRight className="h-4 w-4" />
+                </span>
               </Link>
-            );
-          })}
-        </nav>
+            </Magnetic>
 
-        {/* Contact CTA Button */}
-        <Link
-          href="/contact"
-          className="hidden items-center gap-2 rounded-full bg-[#D9491F] px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-md shadow-[#D9491F]/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#c43e16] hover:shadow-lg md:inline-flex"
-        >
-          <Send className="h-3.5 w-3.5" />
-          Me contacter
-        </Link>
+            <button
+              type="button"
+              onClick={() => setOpen((value) => !value)}
+              aria-expanded={open}
+              aria-controls="menu-mobile"
+              aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-bone/15 bg-ink-2 lg:hidden"
+            >
+              <span
+                className={cn(
+                  "absolute h-px w-5 bg-bone transition-transform duration-500 ease-expo",
+                  open ? "rotate-45" : "-translate-y-[4px]"
+                )}
+              />
+              <span
+                className={cn(
+                  "absolute h-px w-5 bg-bone transition-transform duration-500 ease-expo",
+                  open ? "-rotate-45" : "translate-y-[4px]"
+                )}
+              />
+            </button>
+          </div>
+        </div>
+      </motion.header>
 
-        {/* Mobile menu toggle */}
-        <button
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white text-text md:hidden"
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X className="h-5 w-5 text-[#D9491F]" /> : <Menu className="h-5 w-5" />}
-        </button>
-      </div>
-
-      {/* Mobile Drawer */}
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-            className="mt-3 rounded-3xl border border-[#D9491F]/20 bg-white/95 p-6 shadow-2xl backdrop-blur-xl md:hidden"
+            id="menu-mobile"
+            data-lenis-prevent
+            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            animate={{ clipPath: "inset(0 0 0% 0)" }}
+            exit={{ clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 z-[110] flex flex-col overflow-y-auto bg-ink px-5 pb-8 pt-28 lg:hidden"
           >
-            <div className="flex flex-col gap-3">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className={`rounded-2xl px-4 py-3 text-base font-semibold transition-all ${
-                      isActive
-                        ? "bg-[#D9491F] text-white"
-                        : "text-text hover:bg-gray-100"
-                    }`}
-                    aria-current={isActive ? "page" : undefined}
+            <div aria-hidden="true" className="pointer-events-none absolute -bottom-40 -right-40 h-96 w-96 rounded-full bg-ember/25 blur-[120px]" />
+
+            <nav aria-label="Menu mobile" className="relative flex flex-1 flex-col justify-center">
+              {[...navLinks, { href: "/contact", label: "Contact" }].map((link, index) => (
+                <div key={link.href} className="overflow-hidden border-b border-bone/10">
+                  <motion.div
+                    initial={{ y: "100%" }}
+                    animate={{ y: "0%" }}
+                    exit={{ y: "100%" }}
+                    transition={{ duration: 0.8, ease: EASE, delay: 0.2 + index * 0.06 }}
                   >
-                    {link.label}
-                  </Link>
-                );
-              })}
-            </div>
-            <Link
-              href="/contact"
-              onClick={() => setOpen(false)}
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#D9491F] px-6 py-3.5 text-base font-bold text-white shadow-md shadow-[#D9491F]/20"
+                    <Link
+                      href={link.href}
+                      onClick={() => setOpen(false)}
+                      className={cn(
+                        "flex items-baseline justify-between gap-4 py-4 font-display text-[clamp(2rem,9vw,4.5rem)] font-bold leading-none tracking-[-0.045em]",
+                        isActive(link.href) ? "text-ember" : "text-bone"
+                      )}
+                    >
+                      <span>{link.label}</span>
+                      <span className="font-mono text-xs font-normal tracking-normal text-smoke">0{index + 1}</span>
+                    </Link>
+                  </motion.div>
+                </div>
+              ))}
+            </nav>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { delay: 0.6 } }}
+              exit={{ opacity: 0 }}
+              className="relative mt-10 flex flex-wrap items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.2em] text-smoke"
             >
-              <Send className="h-4 w-4" />
-              Me contacter
-            </Link>
+              <a href={`mailto:${CONTACT_EMAIL}`} className="normal-case tracking-normal text-bone">
+                {CONTACT_EMAIL}
+              </a>
+              <span>Brazzaville — {time}</span>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
-}
+}

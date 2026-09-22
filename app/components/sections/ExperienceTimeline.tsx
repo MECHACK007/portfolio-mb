@@ -1,8 +1,9 @@
 "use client";
 
+import { motion, useScroll, useTransform } from "framer-motion";
+import { MapPin } from "lucide-react";
 import { useRef } from "react";
-import { Briefcase, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
-import { motion } from "framer-motion";
+import { FadeIn } from "@/app/components/ui/Reveal";
 
 type Experience = {
   period: string;
@@ -17,10 +18,10 @@ const experiences: Experience[] = [
   {
     period: "décembre-mai 2026",
     role: "Développeur Fullstack Web & Mobile",
-    company: "Freelance et Accademique",
+    company: "Freelance et Académique",
     location: "Présentiel",
-    desc: "Conception complète d'applications web React, développement backend Laravel et intégration de bases MongoDb.",
-    tags: ["React", "Flutter", "MongoDb", "express", "Git", "Tailwind CSS", "Nodes"],
+    desc: "Conception complète d'applications web React, développement backend Laravel et intégration de bases MongoDB.",
+    tags: ["React", "Flutter", "MongoDB", "Express", "Git", "Tailwind CSS", "Node.js"],
   },
   {
     period: "janvier-juin 2026",
@@ -37,86 +38,66 @@ type Props = {
 };
 
 export default function ExperienceTimeline({ compact }: Props) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scroll = (dir: "left" | "right") => {
-    scrollRef.current?.scrollBy({ left: dir === "left" ? -340 : 340, behavior: "smooth" });
-  };
+  const listRef = useRef<HTMLOListElement>(null);
+  const { scrollYProgress } = useScroll({ target: listRef, offset: ["start 0.8", "end 0.6"] });
+  const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <div className={compact ? "w-full" : "mx-auto max-w-6xl px-6 py-12"}>
-      <div className="mb-6 flex items-center justify-between">
-        <span className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/20 bg-[#FBE8DD]/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#D9491F]">
-          <Briefcase className="h-4 w-4" />
-          Parcours Professionnel
+    <div className={compact ? "w-full" : "container-x py-12"}>
+      <div className="flex items-end justify-between gap-4 border-b border-bone/10 pb-5">
+        <h3 className="text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
+          Parcours <span className="font-serif font-normal italic tracking-[-0.02em] text-ember">professionnel</span>
+        </h3>
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
+          {String(experiences.length).padStart(2, "0")} postes
         </span>
-
-        {/* Scroll Controls */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => scroll("left")}
-            aria-label="Précédent"
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D9491F]/20 bg-white text-[#D9491F] shadow-sm transition-all hover:bg-[#D9491F] hover:text-white"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => scroll("right")}
-            aria-label="Suivant"
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-[#D9491F]/20 bg-white text-[#D9491F] shadow-sm transition-all hover:bg-[#D9491F] hover:text-white"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
       </div>
 
-      <div
-        ref={scrollRef}
-        className="flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden py-2"
-      >
-        {experiences.map((exp, index) => (
-          <div
-            key={exp.role + exp.period}
-            className="group snap-start flex-shrink-0 w-72 sm:w-80 rounded-3xl border border-[#D9491F]/15 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#D9491F]/30 hover:shadow-lg flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-mono text-2xl font-black text-[#D9491F]/30 group-hover:text-[#D9491F] transition-colors">
-                  0{index + 1}
-                </span>
-                <span className="rounded-full bg-[#FBE8DD] px-3 py-1 text-[11px] font-semibold text-[#D9491F]">
-                  {exp.period}
-                </span>
-              </div>
+      <ol ref={listRef} className="relative mt-12 space-y-14 pl-8 sm:pl-12">
+        <span aria-hidden="true" className="absolute bottom-2 left-[5px] top-2 w-px bg-bone/10 sm:left-[7px]" />
+        <motion.span
+          aria-hidden="true"
+          style={{ scaleY: lineScale }}
+          className="absolute bottom-2 left-[5px] top-2 w-px origin-top bg-ember sm:left-[7px]"
+        />
 
-              <h3 className="text-lg font-bold text-text group-hover:text-[#D9491F] transition-colors">
+        {experiences.map((exp, index) => (
+          <li key={exp.role + exp.period} className="group relative">
+            <span
+              aria-hidden="true"
+              className="absolute -left-8 top-1.5 flex h-3 w-3 items-center justify-center rounded-full border border-ember bg-ink sm:-left-12 sm:h-4 sm:w-4"
+            >
+              <span className="h-1 w-1 rounded-full bg-ember transition-transform duration-500 group-hover:scale-[2.5]" />
+            </span>
+
+            <FadeIn delay={index * 0.1}>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[11px] uppercase tracking-[0.2em]">
+                <span className="text-ember">0{index + 1}</span>
+                <span className="text-smoke">{exp.period}</span>
+              </div>
+              <h4 className="mt-3 text-2xl font-bold leading-tight tracking-[-0.035em] transition-colors duration-500 group-hover:text-ember sm:text-3xl">
                 {exp.role}
-              </h3>
-              <p className="mt-1 text-xs font-medium text-muted flex items-center gap-1.5">
-                <span>{exp.company}</span>
+              </h4>
+              <p className="mt-2 flex flex-wrap items-center gap-2 text-sm text-smoke">
+                <span className="text-bone">{exp.company}</span>
                 <span>•</span>
-                <span className="flex items-center gap-0.5">
-                  <MapPin className="h-3 w-3 text-[#D9491F]" />
+                <span className="flex items-center gap-1">
+                  <MapPin className="h-3.5 w-3.5 text-ember" />
                   {exp.location}
                 </span>
               </p>
-
-              <p className="mt-4 text-xs sm:text-sm leading-relaxed text-muted">
-                {exp.desc}
-              </p>
-            </div>
-
-            <div className="mt-5 flex flex-wrap gap-1.5 border-t border-black/5 pt-3">
-              {exp.tags.map((tag) => (
-                <span key={tag} className="rounded-md bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-text">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
+              <p className="mt-4 max-w-2xl leading-relaxed text-bone/75">{exp.desc}</p>
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {exp.tags.map((tag) => (
+                  <li key={tag} className="rounded-full border border-bone/15 px-3 py-1 text-xs text-bone/80">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            </FadeIn>
+          </li>
         ))}
-      </div>
+      </ol>
     </div>
   );
 }
-

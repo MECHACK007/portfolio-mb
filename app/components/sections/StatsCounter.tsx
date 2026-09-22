@@ -1,110 +1,81 @@
 "use client";
 
-import { ComponentType, useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
-import { Clock3, Package, Heart, TrendingUp, Sparkles } from "lucide-react";
+import { animate, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { FadeIn, RevealLines } from "@/app/components/ui/Reveal";
+import SectionLabel from "@/app/components/ui/SectionLabel";
 
 type Stat = {
   label: string;
   sublabel: string;
   value: number;
   suffix?: string;
-  icon: ComponentType<{ className?: string }>;
 };
 
 const stats: Stat[] = [
-  { label: "Expérience", sublabel: "Années de pratique web & mobile", value: 2, suffix: "+", icon: Clock3 },
-  { label: "Projets livrés", sublabel: "Applications & sites déployés", value: 3, suffix: "+", icon: Package },
-  { label: "Satisfaction client", sublabel: "Engagement & qualité garantis", value: 90, suffix: "%", icon: Heart },
+  { label: "Expérience", sublabel: "Années de pratique web & mobile", value: 2, suffix: "+" },
+  { label: "Projets livrés", sublabel: "Applications & sites déployés", value: 3, suffix: "+" },
+  { label: "Satisfaction client", sublabel: "Engagement & qualité garantis", value: 90, suffix: "%" },
 ];
 
-function Counter({ value, suffix, delay }: { value: number; suffix?: string; delay: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
+function Counter({ value, suffix }: { value: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (!inView) return;
-    const duration = 1600;
-    const startTime = performance.now() + delay;
-
-    function tick(now: number) {
-      const progress = Math.min((now - startTime) / duration, 1);
-      setCount(Math.floor(Math.max(0, progress) * value));
-      if (progress < 1) requestAnimationFrame(tick);
-    }
-
-    requestAnimationFrame(tick);
-  }, [inView, value, delay]);
+    const controls = animate(0, value, {
+      duration: 2.2,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate: (latest) => setCount(Math.round(latest)),
+    });
+    return () => controls.stop();
+  }, [inView, value]);
 
   return (
-    <span
-      ref={ref}
-      className="text-5xl font-black tracking-tight sm:text-6xl md:text-7xl bg-gradient-to-r from-[#D9491F] via-[#E85D35] to-[#B03410] bg-clip-text text-transparent"
-    >
+    <span ref={ref} className="tabular-nums">
       {count}
-      {suffix}
+      <span className="text-ember">{suffix}</span>
     </span>
   );
 }
 
 export default function StatsCounter() {
   return (
-    <section className="relative px-6 py-16 md:py-24">
-      <div className="mx-auto max-w-6xl text-center mb-12">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/20 bg-[#FBE8DD]/60 px-4 py-1.5 text-xs sm:text-sm font-semibold uppercase tracking-wider text-[#D9491F]"
-        >
-          <TrendingUp className="h-3.5 w-3.5" />
-          Impact &amp; Résultats
-        </motion.div>
+    <section className="relative py-24 sm:py-32">
+      <div className="container-x">
+        <SectionLabel index="01">Impact &amp; Résultats</SectionLabel>
+        <RevealLines
+          as="h2"
+          className="mt-8 text-[clamp(2.4rem,5.6vw,5.6rem)] font-bold leading-[0.92] tracking-[-0.05em]"
+          lines={[
+            "Les chiffres qui",
+            <span key="accent" className="font-serif font-normal italic tracking-[-0.02em] text-ember">
+              témoignent.
+            </span>,
+          ]}
+        />
 
-        <motion.h2
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="mt-4 text-3xl sm:text-4xl md:text-5xl font-black text-text tracking-tight"
-        >
-          Les chiffres qui <span className="framed-accent text-[#D9491F]">témoignent</span>
-        </motion.h2>
-      </div>
-
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-3">
-        {stats.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <motion.div
+        <div className="mt-16 grid border-t border-bone/10 sm:grid-cols-3">
+          {stats.map((stat, index) => (
+            <FadeIn
               key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.12 }}
-              className="group relative overflow-hidden rounded-3xl border border-[#D9491F]/15 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-[#D9491F]/10 hover:border-[#D9491F]/30"
+              delay={index * 0.12}
+              className="group relative border-b border-bone/10 py-10 sm:border-b-0 sm:border-r sm:px-8 sm:first:pl-0 sm:last:border-r-0 sm:last:pr-0"
             >
-              {/* Corner accent glow */}
-              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-[#D9491F]/5 transition-all duration-300 group-hover:scale-150 group-hover:bg-[#D9491F]/10" />
-
-              <div className="mb-6 flex items-center justify-between">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FBE8DD] text-[#D9491F] transition-transform duration-300 group-hover:scale-110">
-                  <Icon className="h-6 w-6 text-[#D9491F]" />
-                </div>
-                <Sparkles className="h-4 w-4 text-[#D9491F]/40 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.22em] text-smoke">
+                <span>{stat.label}</span>
+                <span className="text-ember">0{index + 1}</span>
               </div>
-
-              <Counter value={stat.value} suffix={stat.suffix} delay={index * 120} />
-
-              <h3 className="mt-4 text-lg font-bold text-text">{stat.label}</h3>
-              <p className="mt-1 text-xs sm:text-sm text-muted">{stat.sublabel}</p>
-            </motion.div>
-          );
-        })}
+              <p className="mt-10 font-display text-[clamp(5.5rem,12vw,12rem)] font-bold leading-[0.8] tracking-[-0.07em] transition-transform duration-700 ease-expo group-hover:-translate-y-2">
+                <Counter value={stat.value} suffix={stat.suffix} />
+              </p>
+              <p className="mt-6 text-smoke">{stat.sublabel}</p>
+            </FadeIn>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
-

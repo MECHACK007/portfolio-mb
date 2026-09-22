@@ -1,127 +1,113 @@
 "use client";
 
 import Image from "next/image";
-import { Download, UserRound, Sparkles, CheckCircle2 } from "lucide-react";
+import { motion, useMotionTemplate, useScroll, useTransform } from "framer-motion";
+import { Check, Download } from "lucide-react";
+import { useRef } from "react";
+import Magnetic from "@/app/components/ui/Magnetic";
+import RollText from "@/app/components/ui/RollText";
+import { RevealLines, ScrollText } from "@/app/components/ui/Reveal";
+import SectionLabel from "@/app/components/ui/SectionLabel";
 import ExperienceTimeline from "./ExperienceTimeline";
 import Formation from "./Formation";
-import { motion } from "framer-motion";
+import portraitPhoto from "@/public/images/Hero_Rosca.webp";
+
+const quickSkills = [
+  "Next.js 16, React et Tailwind CSS",
+  "Applications mobiles Flutter avec intégration Paiement Mobile",
+  "Conception d’APIs REST et solutions IA automatisées",
+];
 
 export default function AboutSection() {
+  const photoRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: photoRef, offset: ["start end", "center center"] });
+  const inset = useTransform(scrollYProgress, [0, 1], [16, 0]);
+  const clipPath = useMotionTemplate`inset(${inset}% ${inset}% ${inset}% ${inset}% round 2rem)`;
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1.35, 1]);
+
   return (
-    <section className="relative mx-auto max-w-6xl px-6 py-20 md:py-28 overflow-hidden">
-      {/* Glow background */}
-      <div className="pointer-events-none absolute -left-20 top-1/3 h-[400px] w-[400px] rounded-full bg-[#D9491F]/10 blur-[120px]" />
+    <section id="a-propos" className="relative overflow-clip py-24 sm:py-36">
+      <div className="container-x grid gap-16 lg:grid-cols-12 lg:gap-10">
+        <div className="lg:col-span-5">
+          <div className="lg:sticky lg:top-24">
+            <SectionLabel index="03">À propos de moi</SectionLabel>
 
-      <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-start">
-        {/* Left Column: Photo & Quick Bio Card */}
-        <div className="lg:col-span-5 lg:sticky lg:top-24">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="group relative overflow-hidden rounded-3xl border border-[#D9491F]/20 bg-white p-4 shadow-xl shadow-[#D9491F]/10"
-          >
-            {/* Image container */}
-            <div className="relative h-[340px] sm:h-[400px] w-full overflow-hidden rounded-2xl bg-gradient-to-b from-[#FFF7F0] to-[#FBE8DD]">
-              <Image
-                src="/images/Hero_Rosca.PNG"
-                alt="Rosca — Développeur Web & Mobile"
-                fill
-                sizes="(min-width: 1024px) 400px, 100vw"
-                className="object-cover object-center transition duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <motion.div
+              ref={photoRef}
+              style={{ clipPath }}
+              className="relative mt-8 aspect-[4/5] overflow-hidden bg-ink-3 lg:aspect-[6/5]"
+            >
+              <motion.div style={{ scale: imageScale }} className="absolute inset-0">
+                <Image
+                  src={portraitPhoto}
+                  alt="Rosca — Développeur Web & Mobile"
+                  fill
+                  placeholder="blur"
+                  sizes="(min-width: 1024px) 40vw, 100vw"
+                  className="object-cover object-center"
+                />
+              </motion.div>
+              <div className="absolute inset-0 bg-linear-to-t from-ink/85 via-ink/10 to-transparent" />
+              <span className="absolute left-5 top-5 rounded-full border border-bone/20 bg-ink/50 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.2em] backdrop-blur-md">
+                Rosca • Dev Fullstack
+              </span>
+              <div className="absolute inset-x-6 bottom-6">
+                <p className="font-display text-4xl font-bold tracking-[-0.05em] sm:text-5xl">
+                  Rosca<span className="text-ember">.</span>
+                </p>
+                <p className="mt-1 font-serif text-lg italic text-bone/80">Passionné par le code &amp; l&apos;innovation</p>
+              </div>
+            </motion.div>
 
-              {/* Status pill overlay */}
-              <div className="absolute top-4 left-4 flex items-center gap-2 rounded-full border border-white/40 bg-white/90 px-3 py-1.5 text-xs font-semibold text-text shadow-md backdrop-blur-md">
-                <Sparkles className="h-3.5 w-3.5 text-[#D9491F]" />
-                <span>Rosca • Dev Fullstack</span>
-              </div>
+            <ul className="mt-6 divide-y divide-bone/10 border-y border-bone/10">
+              {quickSkills.map((skill) => (
+                <li key={skill} className="flex items-center gap-3 py-2.5 text-sm text-bone/85">
+                  <Check className="h-4 w-4 shrink-0 text-ember" />
+                  {skill}
+                </li>
+              ))}
+            </ul>
 
-              {/* Name badge */}
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <h3 className="text-xl font-black">Rosca</h3>
-                <p className="text-xs text-white/80">Passionné par le code &amp; l'innovation</p>
-              </div>
-            </div>
-
-            {/* Quick Skills list under image */}
-            <div className="mt-4 p-2 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-medium text-text">
-                <CheckCircle2 className="h-4 w-4 text-[#D9491F] shrink-0" />
-                <span>Next.js 16, React et Tailwind CSS</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-medium text-text">
-                <CheckCircle2 className="h-4 w-4 text-[#D9491F] shrink-0" />
-                <span>Applications mobiles Flutter avec intégration Paiement Mobile</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-medium text-text">
-                <CheckCircle2 className="h-4 w-4 text-[#D9491F] shrink-0" />
-                <span>Conception d’APIs REST et solutions IA automatisées</span>
-              </div>
-            </div>
-
-            {/* Download CV button */}
-            <div className="mt-4 pt-4 border-t border-black/5 text-center">
+            <Magnetic strength={0.12} className="mt-6 w-full">
               <a
                 href="/cv-rosca.pdf"
                 download="CV_Rosca_Dev.pdf"
-                className="inline-flex w-full items-center justify-center gap-2.5 rounded-2xl bg-[#D9491F] px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-[#D9491F]/20 transition-all duration-300 hover:bg-[#c43e16] hover:shadow-lg"
+                className="group flex w-full items-center justify-between gap-4 rounded-full bg-ember py-2 pl-6 pr-2 font-semibold text-ink transition-colors duration-500 hover:bg-bone"
               >
-                <Download className="h-4 w-4" />
-                Télécharger mon CV (PDF)
+                <RollText>Télécharger mon CV (PDF)</RollText>
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-ink text-bone transition-transform duration-500 group-hover:translate-y-0.5">
+                  <Download className="h-4 w-4" />
+                </span>
               </a>
-            </div>
-          </motion.div>
+            </Magnetic>
+          </div>
         </div>
 
-        {/* Right Column: Bio text + Experience + Formation */}
-        <div className="lg:col-span-7 space-y-12">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/20 bg-[#FBE8DD]/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#D9491F]">
-              <UserRound className="h-4 w-4" />
-              À propos de moi
-            </span>
+        <div className="lg:col-span-7 lg:pl-8">
+          <RevealLines
+            as="h2"
+            className="text-[clamp(2.4rem,5.4vw,5.4rem)] font-bold leading-[0.92] tracking-[-0.05em]"
+            lines={[
+              "Créer des produits",
+              "digitaux",
+              <span key="accent" className="font-serif font-normal italic tracking-[-0.02em] text-ember">
+                qui ont de l&apos;impact.
+              </span>,
+            ]}
+          />
 
-            <h2 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-black text-text tracking-tight leading-tight">
-              Créer des produits digitaux{" "}
-              <span className="framed-accent text-[#D9491F]">qui ont de l'impact</span>
-            </h2>
+          <ScrollText
+            className="mt-12 font-display text-[clamp(1.45rem,2.5vw,2.25rem)] font-medium leading-[1.25] tracking-[-0.025em]"
+            highlight={["2+", "ans", "d'expérience"]}
+            text="Développeur Web & Mobile avec 2+ ans d'expérience, je combine adaptabilité, rigueur technique et compréhension des enjeux métier. J'interviens sur l'ensemble du cycle d'un projet : du design d'architecture à la mise en production."
+          />
 
-            <p className="mt-6 text-base sm:text-lg leading-relaxed text-muted">
-              Développeur Web &amp; Mobile avec <strong className="text-text font-semibold">2+ ans d'expérience</strong>, je combine adaptabilité, rigueur technique et compréhension des enjeux métier. J'interviens sur l'ensemble du cycle d'un projet : du design d'architecture à la mise en production.
-            </p>
-          </motion.div>
-
-          {/* Experience Timeline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
+          <div className="mt-24 space-y-24">
             <ExperienceTimeline compact />
-          </motion.div>
-
-          {/* Formation Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
             <Formation />
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
-

@@ -1,5 +1,14 @@
+"use client";
+
 import Link from "next/link";
-import { Zap, Mail, Globe, Code2 } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowUp, ArrowUpRight } from "lucide-react";
+import { useRef, type ReactNode } from "react";
+import RollText from "@/app/components/ui/RollText";
+import SectionLabel from "@/app/components/ui/SectionLabel";
+import { useLenis } from "@/app/components/ui/SmoothScroll";
+import { useLocalTime } from "@/app/components/ui/hooks";
+import { CONTACT_EMAIL, whatsappUrl } from "@/app/lib/contact";
 
 const links = [
   { href: "/", label: "Accueil" },
@@ -9,92 +18,117 @@ const links = [
   { href: "/contact", label: "Contact" },
 ];
 
+const socials = [
+  { href: "https://github.com", label: "GitHub" },
+  { href: "https://linkedin.com", label: "LinkedIn" },
+  { href: whatsappUrl("Bonjour Rosca, je vous contacte depuis votre portfolio."), label: "WhatsApp" },
+];
+
 export default function Footer() {
+  const time = useLocalTime();
+  const lenisRef = useLenis();
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end end"] });
+  const wordY = useTransform(scrollYProgress, [0.3, 1], ["60%", "0%"]);
+
+  const scrollToTop = () => {
+    const lenis = lenisRef?.current;
+    if (lenis) lenis.scrollTo(0, { duration: 1.8 });
+    else window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <footer className="px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] border border-[#D9491F]/20 bg-gradient-to-br from-[#FFF8F2] via-white to-[#FBE8DD] p-8 sm:p-12 shadow-xl shadow-[#D9491F]/10">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
-          {/* Brand & Tagline */}
-          <div className="max-w-xl">
-            <Link href="/" className="inline-flex items-center gap-2 text-2xl font-black tracking-tight text-text">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#D9491F] text-white">
-                <Zap className="h-5 w-5 fill-white text-white" />
-              </div>
-              <span>Rosca<span className="text-[#D9491F]">.</span></span>
-            </Link>
-
-            <h3 className="mt-4 text-2xl font-extrabold tracking-tight text-text sm:text-3xl">
-              Construisons des produits utiles, élégants et performants.
-            </h3>
-
-            <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted">
-              Développeur Fullstack en Next.js, React, APIs REST et Flutter mobile. Disponible pour des missions freelance et des collaborations en consultance.
+    <footer ref={ref} className="relative overflow-hidden bg-ink pt-24 sm:pt-32">
+      <div className="container-x">
+        <div className="grid gap-16 border-t border-bone/10 pt-14 lg:grid-cols-12">
+          <div className="lg:col-span-6">
+            <SectionLabel index="∞">Restons en contact</SectionLabel>
+            <h2 className="mt-8 text-[clamp(2.2rem,4.6vw,4.4rem)] font-bold leading-[0.95] tracking-[-0.045em]">
+              Construisons des produits{" "}
+              <span className="font-serif font-normal italic tracking-[-0.02em] text-ember">utiles, élégants</span> et
+              performants.
+            </h2>
+            <p className="mt-6 max-w-lg text-smoke">
+              Développeur Fullstack en Next.js, React, APIs REST et Flutter mobile. Disponible pour des missions
+              freelance et des collaborations en consultance.
             </p>
-
-            <div className="mt-6 flex items-center gap-3">
-              {/* GitHub SVG */}
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#D9491F]/15 bg-white text-text transition-all hover:bg-[#D9491F] hover:text-white"
-              >
-                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                </svg>
-              </a>
-
-              {/* LinkedIn SVG */}
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#D9491F]/15 bg-white text-text transition-all hover:bg-[#D9491F] hover:text-white"
-              >
-                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                </svg>
-              </a>
-
-              {/* Email */}
-              <a
-                href="mailto:roscabangoulou@icloud.com"
-                aria-label="Email"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[#D9491F]/15 bg-white text-text transition-all hover:bg-[#D9491F] hover:text-white"
-              >
-                <Mail className="h-4 w-4" />
-              </a>
-            </div>
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="group mt-10 inline-flex max-w-full items-center gap-4 font-display text-lg font-semibold tracking-tight sm:text-3xl"
+            >
+              <span className="link-underline truncate">{CONTACT_EMAIL}</span>
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ember text-ink transition-transform duration-500 group-hover:rotate-45">
+                <ArrowUpRight className="h-5 w-5" />
+              </span>
+            </a>
           </div>
 
-          {/* Quick Links */}
-          <div className="flex flex-col gap-3 rounded-2xl border border-[#D9491F]/10 bg-white/80 p-6 shadow-sm sm:min-w-[220px]">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-[#D9491F]">Navigation</h4>
-            <div className="flex flex-col gap-2.5 mt-1">
+          <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:col-span-6 lg:pl-12">
+            <FooterColumn title="Navigation">
               {links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm font-medium text-text/80 transition-colors hover:text-[#D9491F]"
-                >
-                  {link.label}
+                <Link key={link.href} href={link.href} className="group w-fit text-bone/80 transition-colors hover:text-bone">
+                  <RollText>{link.label}</RollText>
                 </Link>
               ))}
-            </div>
-          </div>
-        </div>
+            </FooterColumn>
 
-        {/* Bottom copyright line */}
-        <div className="mt-10 flex flex-col gap-4 border-t border-black/5 pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Rosca — Tous droits réservés.</p>
-          <div className="flex items-center gap-4">
-            <span>Conçu avec Next.js 16 &amp; Tailwind CSS</span>
+            <FooterColumn title="Réseaux">
+              {socials.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex w-fit items-center gap-1.5 text-bone/80 transition-colors hover:text-bone"
+                >
+                  <RollText>{social.label}</RollText>
+                  <ArrowUpRight className="h-3.5 w-3.5 text-ember" />
+                </a>
+              ))}
+            </FooterColumn>
+
+            <FooterColumn title="Infos">
+              <span className="text-bone/80">Brazzaville, Congo</span>
+              <span className="text-bone/80">
+                Heure locale <span className="font-mono text-ember">{time}</span>
+              </span>
+              <span className="text-bone/80">Remote &amp; Hybride</span>
+              <button
+                type="button"
+                onClick={scrollToTop}
+                className="group mt-3 flex w-fit items-center gap-2 rounded-full border border-bone/15 px-4 py-2 text-sm transition-colors hover:border-ember hover:text-ember"
+              >
+                Haut de page
+                <ArrowUp className="h-3.5 w-3.5 transition-transform duration-500 group-hover:-translate-y-0.5" />
+              </button>
+            </FooterColumn>
           </div>
         </div>
+      </div>
+
+      <div aria-hidden="true" className="relative mt-16 select-none overflow-hidden">
+        <motion.p
+          style={{ y: wordY }}
+          className="text-center font-display text-[25.5vw] font-bold leading-[0.8] tracking-[-0.075em]"
+        >
+          <span className="bg-linear-to-b from-bone via-bone/80 to-bone/5 bg-clip-text text-transparent">Rosca</span>
+          <span className="text-ember">.</span>
+        </motion.p>
+      </div>
+
+      <div className="container-x relative flex flex-col gap-2 border-t border-bone/10 py-6 font-mono text-[11px] uppercase tracking-[0.18em] text-smoke sm:flex-row sm:items-center sm:justify-between">
+        <p>© {new Date().getFullYear()} Rosca — Tous droits réservés.</p>
+        <p>Conçu avec Next.js 16 &amp; Tailwind CSS</p>
       </div>
     </footer>
   );
 }
 
+function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-3 text-sm">
+      <h3 className="mb-2 font-mono text-[11px] font-normal uppercase tracking-[0.22em] text-smoke">{title}</h3>
+      {children}
+    </div>
+  );
+}

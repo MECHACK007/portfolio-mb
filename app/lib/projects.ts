@@ -1,3 +1,9 @@
+import type { StaticImageData } from "next/image";
+import gestionDetteImage from "@/public/images/projects/Gestion_Dette.webp";
+import mobileNdakoImage from "@/public/images/projects/mobile_Ndako.webp";
+import ndakoImage from "@/public/images/projects/Ndako.webp";
+import tangoImage from "@/public/images/projects/Tango.webp";
+
 export type ProjectSpec = {
   isHosted: boolean;
   statusText: string;
@@ -19,7 +25,8 @@ export type Project = {
   longDescription: string;
   challenge?: string;
   solution?: string;
-  image: string;
+  /** Static import (compressed WebP, with blur placeholder) or a public path. */
+  image: StaticImageData | string;
   url?: string;
   githubUrl?: string;
   domain: string;
@@ -33,11 +40,11 @@ export const projects: Project[] = [
     slug: "tango-na-ngai",
     title: "Tango Na Ngai",
     subtitle: "Application Web PWA de gestion de temps",
-    description: "Application Web PWA de gestion du temps qui permet de planifier en deux ou three clics et de rester productif partout.",
+    description: "Application Web PWA de gestion du temps qui permet de planifier en deux ou trois clics et de rester productif partout.",
     longDescription: "Tango Na Ngai est une solution complète de gestion du temps conçue sous forme de Progressive Web App (PWA) et d'application mobile. Elle offre une planification ultra-rapide, une organisation par priorités, un suivi en temps réel du temps consacré aux tâches et des statistiques d'analyse de productivité. Son architecture garantit un fonctionnement fluide même en l'absence de réseau internet avec synchronisation automatique dès le retour de la connexion.",
     challenge: "Offrir une expérience fluide et instantanée sur tous les écrans tout en assurant la persistance et la synchronisation des données hors-ligne.",
     solution: "Mise en place d'un Service Worker PWA sur mesure avec gestion intelligente du cache, couplé à un backend Laravel et une base de données MySQL.",
-    image: "/images/projects/Tango.png",
+    image: tangoImage,
     url: undefined,
     domain: "Gestion de temps",
     tags: ["React", "Laravel", "MySQL"],
@@ -98,7 +105,7 @@ export const projects: Project[] = [
     longDescription: "Ndako na Ngai est une plateforme de PropTech conçue pour simplifier la mise en relation entre propriétaires, agences et locataires/acheteurs. L'application propose la recherche géolocalisée de logements, l'exploration de galeries photos enrichies, la réservation de visites et la gestion en ligne des dossiers locatifs.",
     challenge: "Créer une synergie parfaite entre la plateforme web administrative et l'application mobile grand public sans duplication de code métier.",
     solution: "Conception d'une API REST centrale sous Node.js/Express assurant l'authentification sécurisée, la validation des données Zod et la distribution vers le Web (React) et le Mobile (Flutter).",
-    image: "/images/projects/mobile_Ndako.PNG",
+    image: mobileNdakoImage,
     url: undefined,
     domain: "Gestion immobilière",
     tags: ["Flutter", "Dart", "MongoDB", "Node"],
@@ -128,7 +135,7 @@ export const projects: Project[] = [
     longDescription: "Ndako Na Ngai Web est une plateforme immobilière complète développée avec la stack MERN pour offrir une gestion fluide des annonces, des utilisateurs et des transactions. Le site permet aux propriétaires de publier leurs biens, aux locataires de rechercher facilement des logements et aux agents de suivre les demandes en temps réel.",
     challenge: "Unifier l'expérience d'administration et de recherche immobilière en ligne tout en conservant une navigation réactive et une gestion sécurisée des données.",
     solution: "Développement d'une application web moderne avec React pour le front-end, Express/Node pour l'API backend et MongoDB pour la persistance des données.",
-    image: "/images/projects/Ndako.png",
+    image: ndakoImage,
     url: undefined,
     domain: "Gestion immobilière",
     tags: ["MongoDB", "Express", "React", "Node"],
@@ -158,7 +165,7 @@ export const projects: Project[] = [
     longDescription: "Solution logicielle desktop robuste dédiée aux PME et commerçants pour la tenue et le suivi des créances et dettes financières. L'application offre un tableau de bord centralisé des créances en souffrance, des échéanciers interactifs, des alertes de relance et l'impression automatique de factures, de reçus et d'états financiers.",
     challenge: "Garantir un haut niveau de sécurité et de performances hors-ligne sur ordinateur avec une base de données locale résiliente.",
     solution: "Développement d'une application Java desktop native avec gestion des transactions MySQL, validation stricte des bilans et génération de rapports PDF personnalisés.",
-    image: "/images/projects/Gestion_Dette.png",
+    image: gestionDetteImage,
     url: undefined,
     domain: "Application Desktop",
     tags: ["Java", "git", "MySQL"],

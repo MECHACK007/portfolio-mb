@@ -1,6 +1,9 @@
-import Link from "next/link";
-import { ArrowRight, Mail, MessageCircle, Send, MapPin, Clock, Sparkles } from "lucide-react";
+import { ArrowUpRight, Mail, MessageCircle } from "lucide-react";
+import type { ReactNode } from "react";
 import ContactForm from "@/app/components/contact/ContactForm";
+import PageHero from "@/app/components/ui/PageHero";
+import { FadeIn } from "@/app/components/ui/Reveal";
+import { CONTACT_EMAIL, whatsappUrl } from "@/app/lib/contact";
 
 export const metadata = {
   title: "Contact — Rosca",
@@ -8,92 +11,101 @@ export const metadata = {
 };
 
 export default function ContactPage() {
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "242065147072";
-  const waMessage = encodeURIComponent("Bonjour Rosca, je souhaite échanger sur un projet.");
-
   return (
-    <main className="overflow-hidden pt-6">
-      <section className="mx-auto max-w-6xl px-6 py-12">
-        <div className="rounded-[2.5rem] border border-[#D9491F]/20 bg-gradient-to-br from-[#FFF8F2] via-white to-[#FBE8DD] p-8 sm:p-12 md:p-16 shadow-xl shadow-[#D9491F]/10">
-          <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#D9491F]/20 bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#D9491F]">
-              <Send className="h-3.5 w-3.5" />
-              Contact Direct
-            </span>
-            <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-text leading-tight">
-              Parlons de votre <span className="framed-accent text-[#D9491F]">prochain projet</span>.
-            </h1>
-            <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted">
-              Que vous ayez un cahier des charges précis ou simplement besoin d&apos;un premier conseil technique, contactez-moi. Je vous répondrai en moins de 24 heures.
-            </p>
-          </div>
+    <>
+      <PageHero
+        index="01"
+        eyebrow="Contact Direct"
+        crumb="Contact"
+        lines={[
+          "Parlons de votre",
+          <span key="accent" className="font-serif font-normal italic tracking-[-0.02em] text-ember">
+            prochain projet.
+          </span>,
+        ]}
+        description="Que vous ayez un cahier des charges précis ou simplement besoin d'un premier conseil technique, contactez-moi. Je vous répondrai en moins de 24 heures."
+        highlights={["Temps de réponse : < 24h", "Disponible en Remote & Hybride"]}
+      />
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {/* Email Card */}
-            <a
-              href="mailto:roscabangoulou@icloud.com"
-              className="group rounded-3xl border border-[#D9491F]/15 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-[#D9491F]/30 hover:shadow-xl flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FBE8DD] text-[#D9491F] transition-transform duration-300 group-hover:scale-110">
-                  <Mail className="h-6 w-6" />
-                </div>
-                <h2 className="mt-6 text-xl font-bold text-text group-hover:text-[#D9491F] transition-colors">
-                  Par Email
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Idéal pour envoyer un brief détaillé, des maquettes ou une demande de devis officielle.
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-black/5 flex items-center justify-between font-mono text-sm font-semibold text-[#D9491F]">
-                <span>roscabangoulou@icloud.com</span>
-                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-              </div>
-            </a>
-
-            {/* WhatsApp Card */}
-            <a
-              href={`https://wa.me/${phone}?text=${waMessage}`}
-              target="_blank"
-              rel="noreferrer"
-              className="group rounded-3xl border border-[#D9491F]/15 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-[#D9491F]/30 hover:shadow-xl flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FBE8DD] text-[#D9491F] transition-transform duration-300 group-hover:scale-110">
-                  <MessageCircle className="h-6 w-6" />
-                </div>
-                <h2 className="mt-6 text-xl font-bold text-text group-hover:text-[#D9491F] transition-colors">
-                  WhatsApp Direct
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Pour un échange rapide, direct et instantané sans friction administrative.
-                </p>
-              </div>
-              <div className="mt-6 pt-4 border-t border-black/5 flex items-center justify-between font-mono text-sm font-semibold text-[#D9491F]">
-                <span>Discuter instantanément</span>
-                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-              </div>
-            </a>
-          </div>
-
-          <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-black/5 pt-6 text-xs sm:text-sm text-muted">
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-[#D9491F]" />
-              <span>Temps de réponse : &lt; 24h</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-[#D9491F]" />
-              <span>Disponible en Remote &amp; Hybride</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Contact Form Section */}
-        <div className="mt-12">
-          <ContactForm />
+      <section className="container-x pb-6">
+        <div className="grid gap-4 md:grid-cols-2">
+          <FadeIn>
+            <ContactCard
+              href={`mailto:${CONTACT_EMAIL}`}
+              index="01"
+              icon={<Mail className="h-6 w-6" />}
+              title="Par Email"
+              description="Idéal pour envoyer un brief détaillé, des maquettes ou une demande de devis officielle."
+              value={CONTACT_EMAIL}
+            />
+          </FadeIn>
+          <FadeIn delay={0.1}>
+            <ContactCard
+              href={whatsappUrl("Bonjour Rosca, je souhaite échanger sur un projet.")}
+              external
+              index="02"
+              icon={<MessageCircle className="h-6 w-6" />}
+              title="WhatsApp Direct"
+              description="Pour un échange rapide, direct et instantané sans friction administrative."
+              value="Discuter instantanément"
+            />
+          </FadeIn>
         </div>
       </section>
-    </main>
+
+      <section className="container-x pb-24 pt-4 sm:pb-36">
+        <ContactForm />
+      </section>
+    </>
   );
 }
 
+function ContactCard({
+  href,
+  external,
+  index,
+  icon,
+  title,
+  description,
+  value,
+}: {
+  href: string;
+  external?: boolean;
+  index: string;
+  icon: ReactNode;
+  title: string;
+  description: string;
+  value: string;
+}) {
+  return (
+    <a
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      className="group relative flex min-h-[22rem] flex-col justify-between overflow-hidden rounded-[2rem] border border-bone/10 bg-ink-2 p-7 sm:p-10"
+    >
+      <span
+        aria-hidden="true"
+        className="absolute inset-0 origin-bottom scale-y-0 bg-ember transition-transform duration-700 ease-expo group-hover:scale-y-100"
+      />
+      <div className="relative flex items-start justify-between">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full border border-bone/15 transition-colors duration-500 group-hover:border-ink/25 group-hover:text-ink">
+          {icon}
+        </span>
+        <span className="font-mono text-xs text-smoke transition-colors duration-500 group-hover:text-ink/60">{index}</span>
+      </div>
+      <div className="relative">
+        <h2 className="text-[clamp(2.4rem,4.5vw,4rem)] font-bold leading-none tracking-[-0.05em] transition-colors duration-500 group-hover:text-ink">
+          {title}
+        </h2>
+        <p className="mt-4 max-w-sm text-smoke transition-colors duration-500 group-hover:text-ink/75">{description}</p>
+        <div className="mt-8 flex items-center justify-between gap-4 border-t border-bone/10 pt-5 transition-colors duration-500 group-hover:border-ink/20">
+          <span className="truncate font-mono text-sm transition-colors duration-500 group-hover:text-ink">{value}</span>
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ember text-ink transition-all duration-500 group-hover:rotate-45 group-hover:bg-ink group-hover:text-bone">
+            <ArrowUpRight className="h-5 w-5" />
+          </span>
+        </div>
+      </div>
+    </a>
+  );
+}
